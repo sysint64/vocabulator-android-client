@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">Vocabulator</string>
+
+    <string name="time_is_out">Время на ответ от сервера вышло\nпопробуйте позже</string>
+    <string name="lost_connection">Соединение потеряно, проверьте подключение к интернету</string>
+    <string name="too_many_requests">Слишком много запросов\nпопробуйте позже</string>
+    <string name="version_error_warning">Похоже ваша версия устарела, советуем обновиться</string>
+    <string name="bad_response">Сервер вернул не валидный ответ, проверьте версию приложения, если это не поможет, обратитесь в тех поддержку.</string>
+    <string name="internal_server_error">Произошла ошибка на сервере\nпожалуйста, попробуйте позже</string>
+    <string name="not_found">Ресурс не найдет</string>
+    <string name="unspecified_access_error">Не удалось получить доступ: не известаня ошибка</string>
+    <string name="retry">Повторить</string>
+    <string name="close">Закрыть</string>
+    <string name="update">Обновить</string>
+    <string name="not_found_error_description">К сожалению данного ресурса больше нет в системе либо сервер временно не доступен\n\nпопробуйте выбрать что нибудь другое либо повторите запрос позже. Также проверьте весрию приложения, возможно есть обновления.</string>
 </resources>

@@ -3,4 +3,12 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="white">#fff</color>
+    <color name="error_board_background">#b94844</color>
+    <color name="warning_background">#446bb9</color>
+    <color name="darkBackground">#2d4059</color>
+
+    <color name="buttonPrimary">#ff5722</color>
+    <color name="buttonPrimaryText">#FF5722</color>
 </resources>
