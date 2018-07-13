@@ -21,7 +21,15 @@ interface WordsService {
 
     data class WordDetails(
         val ref: String,
-        val details: List<TitleValue>
+        val details: List<TitleValue>,
+        val definitions: List<Definition>
+    )
+
+    data class Definition(
+        val title: String,
+        val desc: String,
+        val example: String,
+        val synonyms: List<String>
     )
 
     fun getCategories(): Single<List<Category>>

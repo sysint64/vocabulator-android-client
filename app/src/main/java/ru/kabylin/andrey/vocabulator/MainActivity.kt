@@ -15,6 +15,7 @@ import ru.kabylin.andrey.vocabulator.client.RequestState
 import ru.kabylin.andrey.vocabulator.ext.hideView
 import ru.kabylin.andrey.vocabulator.ext.showView
 import android.support.v7.widget.helper.ItemTouchHelper
+import ru.kabylin.andrey.vocabulator.holders.CategoryCardHolder
 import ru.kabylin.andrey.vocabulator.views.*
 
 class MainActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {

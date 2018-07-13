@@ -1,10 +1,11 @@
-package ru.kabylin.andrey.vocabulator
+package ru.kabylin.andrey.vocabulator.holders
 
 import android.content.Context
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.item_category_card.view.*
+import ru.kabylin.andrey.vocabulator.R
 import ru.kabylin.andrey.vocabulator.services.WordsService
 import ru.kabylin.andrey.vocabulator.views.RecyclerItemHolder
 
