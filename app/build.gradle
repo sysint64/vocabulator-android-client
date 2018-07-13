@@ -17,7 +17,7 @@ android {
         Properties properties = new Properties()
         properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
-        def apiEndpoint = properties.getOrDefault('api.endpoint', '"http://10.0.3.2:12345/api"')
+        def apiEndpoint = properties.getOrDefault('api.endpoint', '"http://35.237.116.16/api"')
         buildConfigField("String", "API_ENDPOINT", apiEndpoint)
     }
     buildTypes {
@@ -54,6 +54,9 @@ dependencies {
 
     implementation "org.jetbrains.anko:anko-commons:$anko_version"
     implementation "org.jetbrains.anko:anko-sqlite:$anko_version"
+
+    implementation 'com.github.bumptech.glide:glide:4.7.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

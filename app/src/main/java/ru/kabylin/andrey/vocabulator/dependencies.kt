@@ -11,6 +11,8 @@ import ru.kabylin.andrey.vocabulator.client.http.HttpClient
 import ru.kabylin.andrey.vocabulator.client.http.HttpClientCompositor
 import ru.kabylin.andrey.vocabulator.compositors.Compositor
 import ru.kabylin.andrey.vocabulator.services.DataStorage
+import ru.kabylin.andrey.vocabulator.services.HttpWordsService
+import ru.kabylin.andrey.vocabulator.services.WordsService
 
 fun dependencies(context: Context) = Kodein.Module {
     bind<Client>() with singleton { HttpClient }
@@ -18,4 +20,5 @@ fun dependencies(context: Context) = Kodein.Module {
         HttpClientCompositor(client = instance<Client>() as HttpClient)
     }
     bind<DataStorage>() with singleton { HttpClient.dataState }
+    bind<WordsService>() with singleton { HttpWordsService(instance<Client>() as HttpClient) }
 }
