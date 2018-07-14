@@ -43,30 +43,6 @@ class MainActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
         toolbar.attachToActivity(this)
         errorsView.attach(container)
 
-        items.add(
-            WordsService.Category(
-                ref = "",
-                image = "https://images.unsplash.com/photo-1489065094455-c2d576ff27a0?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=eb24765f872afe8f0daf28dec236b745&w=1000&q=80",
-                name = "Category 1"
-            )
-        )
-
-        items.add(
-            WordsService.Category(
-                ref = "",
-                image = null,
-                name = "Category 2"
-            )
-        )
-
-        items.add(
-            WordsService.Category(
-                ref = "",
-                image = null,
-                name = "Category 3"
-            )
-        )
-
         recyclerView.adapter = recyclerAdapter
         recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.setHasFixedSize(true)
@@ -75,6 +51,21 @@ class MainActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
         val touchHelper = ItemTouchHelper(callback)
 
         touchHelper.attachToRecyclerView(recyclerView)
+    }
+
+    override fun viewStateRefresh() {
+        super.viewStateRefresh()
+        getCategories()
+    }
+
+    private fun getCategories() {
+        val query = wordsService.getCategories()
+
+        client.execute(query) {
+            items.clear()
+            items.addAll(it.payload)
+            recyclerAdapter.notifyDataSetChanged()
+        }
     }
 
     private fun onCategoryClick(category: WordsService.Category) {

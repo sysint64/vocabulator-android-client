@@ -36,6 +36,10 @@ class WordDetailsActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAw
         WordDetailsAdapter(this, items)
     }
 
+    private val ref by lazy {
+        intent.extras["ref"] as String
+    }
+
     private val wordStatuses = ArrayList<Boolean>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,43 +48,6 @@ class WordDetailsActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAw
 
         toolbar.attachToActivity(this, displayHomeButton = true)
         errorsView.attach(container)
-
-        wordTextView.text = "breakthrough"
-
-        items.add(WordDetailsItemVariant(title = "Pronounce"))
-        items.add(WordDetailsItemVariant(desc = "ˈbrākˌTHro͞o"))
-
-        items.add(WordDetailsItemVariant(title = "Translations"))
-        items.add(WordDetailsItemVariant(listItem = "прорвать"))
-        items.add(WordDetailsItemVariant(listItem = "прорыв"))
-        items.add(WordDetailsItemVariant(listItem = "достижение"))
-
-        val definition = WordsService.Definition(
-            title = "noun",
-            desc = "a sudden, dramatic, and important discovery or development.",
-            example = "a major breakthrough in DNA research",
-            synonyms = "advance, development, step forward, success, improvement, discovery, innovation, revolution, progress, headway".split(",")
-        )
-
-        items.add(WordDetailsItemVariant(definition = definition))
-
-        val definition2 = WordsService.Definition(
-            title = "noun",
-            desc = "a sudden, dramatic, and important discovery or development.",
-            example = "",
-            synonyms = "advance, development".split(",")
-        )
-
-        items.add(WordDetailsItemVariant(definition = definition2))
-
-        val definition3 = WordsService.Definition(
-            title = "noun",
-            desc = "a sudden, dramatic, and important discovery or development.",
-            example = "a major breakthrough in DNA research",
-            synonyms = listOf()
-        )
-
-        items.add(WordDetailsItemVariant(definition = definition3))
 
         recyclerView.adapter = recyclerAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -99,6 +66,34 @@ class WordDetailsActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAw
         revealAnswerButton.hideView()
         rightButton.hideView()
         wrongButton.hideView()
+    }
+
+    override fun viewStateRefresh() {
+        super.viewStateRefresh()
+        getDetails()
+    }
+
+    private fun getDetails() {
+        val query = wordsService.getWordDetails(ref)
+
+        client.execute(query) {
+            val details = it.payload
+            wordTextView.text = details.name
+
+            for (item in details.details) {
+                items.add(WordDetailsItemVariant(title = item.title))
+                items.add(WordDetailsItemVariant(desc = item.value))
+            }
+
+            if (details.translations.isNotEmpty())
+                items.add(WordDetailsItemVariant(title = "Translations"))
+
+            for (translation in details.translations)
+                items.add(WordDetailsItemVariant(listItem = translation))
+
+            for (definition in details.definitions)
+                items.add(WordDetailsItemVariant(definition = definition))
+        }
     }
 
     override fun onRequestStateUpdated(requestState: ClientResponse<RequestState>) {

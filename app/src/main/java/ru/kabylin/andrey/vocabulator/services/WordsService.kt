@@ -22,6 +22,8 @@ interface WordsService {
 
     data class WordDetails(
         val ref: String,
+        val name: String,
+        val translations: List<String>,
         val details: List<TitleValue>,
         val definitions: List<Definition>
     )
@@ -35,7 +37,14 @@ interface WordsService {
 
     fun getCategories(): Single<List<Category>>
 
-    fun getWordsForCategory(): Single<List<Word>>
+    fun getWordsForCategory(categoryRef: String): Single<List<Word>>
 
     fun getWordDetails(ref: String): Single<WordDetails>
+
+    data class CategoryScore(
+        val score: Int,
+        val count: Int
+    )
+
+    fun getScoresCounts(categoryRef: String): Single<List<CategoryScore>>
 }

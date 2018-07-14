@@ -2,6 +2,7 @@ package ru.kabylin.andrey.vocabulator
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.activity_word_list.*
 import kotlinx.android.synthetic.main.item_word_score_count.view.*
@@ -24,6 +25,7 @@ class WordListActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware
 
     private val wordsService: WordsService by instance()
     private val items = ArrayList<WordsService.Word>()
+    private val scoresViews = ArrayList<Pair<Int, View>>()
 
     private val categoryRef by lazy {
         intent.extras["categoryRef"] as String
@@ -43,48 +45,15 @@ class WordListActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware
         toolbar.attachToActivity(this, displayHomeButton = true)
         errorsView.attach(container)
 
-        items.add(
-            WordsService.Word(
-                ref = "",
-                name = "put out",
-                score = 1
-            )
-        )
-
-        items.add(
-            WordsService.Word(
-                ref = "",
-                name = "take out",
-                score = 3
-            )
-        )
-
-        items.add(
-            WordsService.Word(
-                ref = "",
-                name = "look forward",
-                score = 8
-            )
-        )
-
-        items.add(
-            WordsService.Word(
-                ref = "",
-                name = "give up",
-                score = 10
-            )
-        )
-
         recyclerView.adapter = recyclerAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         //
 
-        addScore("New", 0, 0)
+        addScore("New", 0)
 
-        for (i in 1..10) {
-            addScore(i.toString(), i, 10-i)
-        }
+        for (i in 1..10)
+            addScore(i.toString(), i)
 
         //
 
@@ -105,13 +74,42 @@ class WordListActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware
         }
     }
 
-    private fun addScore(title: String, score: Int, count: Int) {
-        val scores = layoutInflater.inflate(R.layout.item_word_score_count, scoresContainer, false) as ViewGroup
-        scoresContainer.addView(scores)
+    override fun viewStateRefresh() {
+        super.viewStateRefresh()
+        getWords()
+        getScoresCounts()
+    }
 
-        scores.scoreTextView.text = title
-        scores.countTextView.text = count.toString()
-        scores.countTextView.setTextColor(getScoreColor(0, 150, score))
+    private fun getWords() {
+        val query = wordsService.getWordsForCategory(categoryRef)
+
+        client.execute(query) {
+            items.clear()
+            items.addAll(it.payload)
+            recyclerAdapter.notifyDataSetChanged()
+        }
+    }
+
+    private fun getScoresCounts() {
+        val query = wordsService.getScoresCounts(categoryRef)
+
+        client.execute(query) {
+            for (categoryScore in it.payload) {
+                val container = scoresViews.first { (score, _) -> score == categoryScore.score }.second
+                container.countTextView.text = categoryScore.count.toString()
+            }
+        }
+    }
+
+    private fun addScore(title: String, score: Int) {
+        val container = layoutInflater.inflate(R.layout.item_word_score_count, scoresContainer, false) as ViewGroup
+        scoresContainer.addView(container)
+
+        container.scoreTextView.text = title
+        container.countTextView.text = "0"
+        container.countTextView.setTextColor(getScoreColor(0, 150, score))
+
+        scoresViews.add(Pair(score, container))
     }
 
     private fun onWordClick(word: WordsService.Word) {
