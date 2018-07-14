@@ -11,7 +11,8 @@ interface WordsService {
 
     data class Word(
         val ref: String,
-        val name: String
+        val name: String,
+        val score: Int
     )
 
     data class TitleValue(

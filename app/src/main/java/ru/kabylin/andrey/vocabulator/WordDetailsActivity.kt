@@ -21,7 +21,7 @@ import ru.kabylin.andrey.vocabulator.services.WordsService
 import ru.kabylin.andrey.vocabulator.views.*
 import java.util.concurrent.TimeUnit
 
-class WordsActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
+class WordDetailsActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
     override val kodeinContext = kcontext(this)
     override val kodein by closestKodein()
 
@@ -43,7 +43,7 @@ class WordsActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_word_details)
 
-        toolbar.attachToActivity(this)
+        toolbar.attachToActivity(this, displayHomeButton = true)
         errorsView.attach(container)
 
         wordTextView.text = "breakthrough"
