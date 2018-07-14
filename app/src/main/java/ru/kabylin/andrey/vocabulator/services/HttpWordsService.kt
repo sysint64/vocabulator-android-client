@@ -8,7 +8,7 @@ class HttpWordsService(client: HttpClient) : WordsService {
         WordsService.Category(
             ref = "1",
             image = "https://images.unsplash.com/photo-1489065094455-c2d576ff27a0?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=eb24765f872afe8f0daf28dec236b745&w=1000&q=80",
-            name = "Category 1"
+            name = "Phrasal verbs"
         ),
         WordsService.Category(
             ref = "2",

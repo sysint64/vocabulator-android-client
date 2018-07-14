@@ -12,6 +12,7 @@ import org.kodein.di.generic.instance
 import org.kodein.di.generic.kcontext
 import ru.kabylin.andrey.vocabulator.client.Client
 import ru.kabylin.andrey.vocabulator.holders.WordInListHolder
+import ru.kabylin.andrey.vocabulator.services.TrainService
 import ru.kabylin.andrey.vocabulator.services.WordsService
 import ru.kabylin.andrey.vocabulator.views.*
 
@@ -24,6 +25,8 @@ class WordListActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware
     override val viewState by lazy { ClientViewState(client, this) }
 
     private val wordsService: WordsService by instance()
+    private val trainService: TrainService by instance()
+
     private val items = ArrayList<WordsService.Word>()
     private val scoresViews = ArrayList<Pair<Int, View>>()
 
@@ -40,7 +43,7 @@ class WordListActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_word_list)
 
-        categoryTitleTextView.text = "Phrasal verbs"
+        categoryTitleTextView.text = intent.extras["categoryName"] as String
 
         toolbar.attachToActivity(this, displayHomeButton = true)
         errorsView.attach(container)
@@ -57,20 +60,18 @@ class WordListActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware
 
         //
 
-        wordTranslationModeButton.setOnClickListener {
-            val extras = mapOf(
-                "categoryRef" to categoryRef,
-                "mode" to "word-translation"
-            )
-            gotoScreen(WordsScreens.TRAIN, extras)
+        translationWorldModeButton.setOnClickListener {
+            val query = trainService.startTranslationWord(categoryRef)
+            client.execute(query) {
+                gotoScreen(WordsScreens.TRAIN)
+            }
         }
 
-        translationWorldModeButton.setOnClickListener {
-            val extras = mapOf(
-                "categoryRef" to categoryRef,
-                "mode" to "translation-word"
-            )
-            gotoScreen(WordsScreens.TRAIN, extras)
+        wordTranslationModeButton.setOnClickListener {
+            val query = trainService.startWordTranslation(categoryRef)
+            client.execute(query) {
+                gotoScreen(WordsScreens.TRAIN)
+            }
         }
     }
 

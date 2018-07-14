@@ -69,7 +69,10 @@ class MainActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
     }
 
     private fun onCategoryClick(category: WordsService.Category) {
-        val extras = mapOf("categoryRef" to category.ref)
+        val extras = mapOf(
+            "categoryRef" to category.ref,
+            "categoryName" to category.name
+        )
         gotoScreen(WordsScreens.LIST, extras)
     }
 

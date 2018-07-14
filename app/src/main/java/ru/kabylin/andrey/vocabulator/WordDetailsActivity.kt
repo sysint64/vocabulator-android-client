@@ -40,8 +40,6 @@ class WordDetailsActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAw
         intent.extras["ref"] as String
     }
 
-    private val wordStatuses = ArrayList<Boolean>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_word_details)
@@ -51,15 +49,6 @@ class WordDetailsActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAw
 
         recyclerView.adapter = recyclerAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
-
-        // Android 5 bug :(
-        Single.just(Unit)
-            .subscribeOn(AndroidSchedulers.mainThread())
-            .delaySubscription(500, TimeUnit.MILLISECONDS)
-            .subscribeOnSuccess {
-                recyclerView.scrollToPosition(0)
-            }
-
         //
 
         wordStatusesContainer.hideView()
@@ -93,6 +82,14 @@ class WordDetailsActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAw
 
             for (definition in details.definitions)
                 items.add(WordDetailsItemVariant(definition = definition))
+
+            // Android 5 bug :(
+            Single.just(Unit)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .delaySubscription(500, TimeUnit.MILLISECONDS)
+                .subscribeOnSuccess {
+                    recyclerView.scrollToPosition(0)
+                }
         }
     }
 
