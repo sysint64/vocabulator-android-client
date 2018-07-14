@@ -2,9 +2,10 @@ package ru.kabylin.andrey.vocabulator
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.widget.ImageView
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.activity_word.*
+import kotlinx.android.synthetic.main.activity_word_details.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.closestKodein
 import org.kodein.di.generic.instance
@@ -35,9 +36,12 @@ class WordsActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
         WordDetailsAdapter(this, items)
     }
 
+    private val wordStatuses = ArrayList<Boolean>()
+    private val wordStatusViews = ArrayList<ImageView>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_word)
+        setContentView(R.layout.activity_word_details)
 
         toolbar.attachToActivity(this)
         errorsView.attach(container)
@@ -89,6 +93,18 @@ class WordsActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
             .subscribeOnSuccess {
                 recyclerView.scrollToPosition(0)
             }
+
+        //
+
+        for (i in 0..10) {
+            val status = i % 2 == 0
+            wordStatuses.add(status)
+            val imageView = layoutInflater.inflate(R.layout.item_word_status, wordStatusesContainer, false) as ImageView
+
+            imageView.setImageResource(if (status) R.drawable.ic_check_circle else R.drawable.ic_close_circle)
+            wordStatusesContainer.addView(imageView)
+            wordStatusViews.add(imageView)
+        }
     }
 
     override fun onRequestStateUpdated(requestState: ClientResponse<RequestState>) {
