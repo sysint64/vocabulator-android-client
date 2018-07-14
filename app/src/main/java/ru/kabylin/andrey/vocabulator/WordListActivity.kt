@@ -11,7 +11,6 @@ import org.kodein.di.generic.instance
 import org.kodein.di.generic.kcontext
 import ru.kabylin.andrey.vocabulator.client.Client
 import ru.kabylin.andrey.vocabulator.holders.WordInListHolder
-import ru.kabylin.andrey.vocabulator.router.Router
 import ru.kabylin.andrey.vocabulator.services.WordsService
 import ru.kabylin.andrey.vocabulator.views.*
 
@@ -19,16 +18,20 @@ class WordListActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware
     override val kodeinContext = kcontext(this)
     override val kodein by closestKodein()
 
-    override val router = Router(this)
+    override val router = WordsRouter(this)
     override val client: Client by instance()
     override val viewState by lazy { ClientViewState(client, this) }
 
     private val wordsService: WordsService by instance()
     private val items = ArrayList<WordsService.Word>()
 
+    private val categoryRef by lazy {
+        intent.extras["categoryRef"] as String
+    }
+
     private val recyclerAdapter by lazy {
         SingleSwipableItemRecyclerAdapter(this, items, R.layout.item_word,
-            ::WordInListHolder)
+            ::WordInListHolder, ::onWordClick)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +40,7 @@ class WordListActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware
 
         categoryTitleTextView.text = "Phrasal verbs"
 
-        toolbar.attachToActivity(this)
+        toolbar.attachToActivity(this, displayHomeButton = true)
         errorsView.attach(container)
 
         items.add(
@@ -82,6 +85,24 @@ class WordListActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware
         for (i in 1..10) {
             addScore(i.toString(), i, 10-i)
         }
+
+        //
+
+        wordTranslationModeButton.setOnClickListener {
+            val extras = mapOf(
+                "categoryRef" to categoryRef,
+                "mode" to "word-translation"
+            )
+            gotoScreen(WordsScreens.TRAIN, extras)
+        }
+
+        translationWorldModeButton.setOnClickListener {
+            val extras = mapOf(
+                "categoryRef" to categoryRef,
+                "mode" to "translation-word"
+            )
+            gotoScreen(WordsScreens.TRAIN, extras)
+        }
     }
 
     private fun addScore(title: String, score: Int, count: Int) {
@@ -91,5 +112,9 @@ class WordListActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware
         scores.scoreTextView.text = title
         scores.countTextView.text = count.toString()
         scores.countTextView.setTextColor(getScoreColor(0, 150, score))
+    }
+
+    private fun onWordClick(word: WordsService.Word) {
+        gotoScreen(WordsScreens.DETAILS, mapOf("ref" to word.ref))
     }
 }

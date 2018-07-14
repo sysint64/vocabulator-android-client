@@ -21,7 +21,7 @@ import ru.kabylin.andrey.vocabulator.services.WordsService
 import ru.kabylin.andrey.vocabulator.views.*
 import java.util.concurrent.TimeUnit
 
-class WordDetailsActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
+class TrainActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
     override val kodeinContext = kcontext(this)
     override val kodein by closestKodein()
 
@@ -36,7 +36,21 @@ class WordDetailsActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAw
         WordDetailsAdapter(this, items)
     }
 
-    private val wordStatuses = ArrayList<Boolean>()
+    enum class WordStatus {
+        AWAIT,
+        CORRECT,
+        INCORRECT,
+    }
+
+    enum class State {
+        ANSWER,
+        REVEALED
+    }
+
+    private val wordStatuses = ArrayList<WordStatus>()
+    private val wordStatusViews = ArrayList<ImageView>()
+
+    private var screenState = State.ANSWER
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,10 +109,48 @@ class WordDetailsActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAw
 
         //
 
-        wordStatusesContainer.hideView()
-        revealAnswerButton.hideView()
-        rightButton.hideView()
-        wrongButton.hideView()
+        for (i in 0..10) {
+            wordStatuses.add(WordStatus.AWAIT)
+            val imageView = layoutInflater.inflate(R.layout.item_word_status, wordStatusesContainer, false) as ImageView
+
+            imageView.setImageResource(R.drawable.ic_checkbox_blank_circle_outline)
+            wordStatusesContainer.addView(imageView)
+            wordStatusViews.add(imageView)
+        }
+
+        updateState()
+
+        revealAnswerButton.setOnClickListener {
+            screenState = State.REVEALED
+            updateState()
+        }
+
+        rightButton.setOnClickListener {
+            screenState = State.ANSWER
+            updateState()
+        }
+
+        wrongButton.setOnClickListener {
+            screenState = State.ANSWER
+            updateState()
+        }
+    }
+
+    private fun updateState() {
+        when (screenState) {
+            State.ANSWER -> {
+                revealAnswerButton.showView()
+                rightButton.hideView()
+                wrongButton.hideView()
+                recyclerView.hideView()
+            }
+            State.REVEALED -> {
+                revealAnswerButton.hideView()
+                rightButton.showView()
+                wrongButton.showView()
+                recyclerView.showView()
+            }
+        }
     }
 
     override fun onRequestStateUpdated(requestState: ClientResponse<RequestState>) {

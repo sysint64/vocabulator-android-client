@@ -15,6 +15,7 @@ import ru.kabylin.andrey.vocabulator.client.RequestState
 import ru.kabylin.andrey.vocabulator.ext.hideView
 import ru.kabylin.andrey.vocabulator.ext.showView
 import android.support.v7.widget.helper.ItemTouchHelper
+import ru.kabylin.andrey.vocabulator.ext.createBundle
 import ru.kabylin.andrey.vocabulator.holders.CategoryCardHolder
 import ru.kabylin.andrey.vocabulator.views.*
 
@@ -22,7 +23,7 @@ class MainActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
     override val kodeinContext = kcontext(this)
     override val kodein by closestKodein()
 
-    override val router = Router(this)
+    override val router = WordsRouter(this)
     override val client: Client by instance()
     override val viewState by lazy { ClientViewState(client, this) }
 
@@ -77,6 +78,8 @@ class MainActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
     }
 
     private fun onCategoryClick(category: WordsService.Category) {
+        val extras = mapOf("categoryRef" to category.ref)
+        gotoScreen(WordsScreens.LIST, extras)
     }
 
     override fun onRequestStateUpdated(requestState: ClientResponse<RequestState>) {
