@@ -23,7 +23,7 @@ class HttpWordsService(client: HttpClient) : WordsService {
     )
 
     private val words = listOf(
-        Pair("1", WordsService.Word(ref = "1", name = "look up to", score = 1)),
+        Pair("1", WordsService.Word(ref = "0", name = "look up to", score = 1)),
         Pair("1", WordsService.Word(ref = "1", name = "put out", score = 1)),
         Pair("1", WordsService.Word(ref = "2", name = "take out", score = 3)),
         Pair("1", WordsService.Word(ref = "3", name = "look forward", score = 8)),
@@ -38,7 +38,7 @@ class HttpWordsService(client: HttpClient) : WordsService {
         Pair("3", WordsService.Word(ref = "12", name = "sphere", score = 4)),
         Pair("3", WordsService.Word(ref = "13", name = "cube", score = 4)),
         Pair("3", WordsService.Word(ref = "14", name = "tetrameter", score = 7)),
-        Pair("3", WordsService.Word(ref = "16", name = "temperament", score = 0))
+        Pair("3", WordsService.Word(ref = "15", name = "temperament", score = 0))
     )
 
     override fun getCategories(): Single<List<WordsService.Category>> =

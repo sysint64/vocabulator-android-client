@@ -4,25 +4,26 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import ru.kabylin.andrey.vocabulator.client.http.HttpClient
 
 class HttpTrainService(
-    client: HttpClient,
-    val wordsService: WordsService
+    val wordsService: WordsService,
+    val scoreService: ScoreService
 ) : TrainService {
 
     companion object {
-        const val PAGE_SIZE = 2
+        const val PAGE_SIZE = 10
     }
 
-    enum class Mode {
-        WORD_TRANSLATION,
-        TRANSLATION_WORD
-    }
-
-    private var mode = Mode.WORD_TRANSLATION
+    private var mode = TrainService.Mode.WORD_TRANSLATION
     private var wordsToLearn = ArrayList<TrainService.Word>()
-    private var pages = ArrayList<ArrayList<Int>>()
+
+    data class WordInPage(
+        val indexInPage: Int,
+        val isRight: Boolean,
+        val wordIndex: Int
+    )
+
+    private var pages = ArrayList<ArrayList<WordInPage>>()
     private var currentPageIndex: Int = 0
     private val newPageEventsSubject = PublishSubject.create<Boolean>()
     private val finishEvents = PublishSubject.create<Boolean>()
@@ -42,31 +43,36 @@ class HttpTrainService(
     override fun startWordTranslation(categoryRef: String): Completable =
         getWords(categoryRef)
             .map {
-                wordsToLearn.clear()
-                wordsToLearn.addAll(it)
-                createPages()
-                mode = Mode.WORD_TRANSLATION
+                init(it)
+                mode = TrainService.Mode.WORD_TRANSLATION
             }
             .toCompletable()
 
     override fun startTranslationWord(categoryRef: String): Completable =
         getWords(categoryRef)
             .map {
-                wordsToLearn.clear()
-                wordsToLearn.addAll(it)
-                createPages()
-                mode = Mode.TRANSLATION_WORD
+                init(it)
+                mode = TrainService.Mode.TRANSLATION_WORD
             }
             .toCompletable()
+
+    private fun init(words: List<TrainService.Word>) {
+        wordsToLearn.clear()
+        wordsToLearn.addAll(words)
+        createPages()
+
+        currentWordIndexRelativePage = 0
+        currentPageIndex = 0
+    }
 
     private fun createPages() {
         pages.clear()
         var accumulator = 0
-        var currentPage = ArrayList<Int>()
+        var currentPage = ArrayList<WordInPage>()
         pages.add(currentPage)
 
-        wordsToLearn.forEachIndexed { index, word ->
-            currentPage.add(index)
+        wordsToLearn.forEachIndexed { index, _ ->
+            currentPage.add(WordInPage(accumulator, false, index))
             accumulator += 1
 
             if (accumulator >= PAGE_SIZE && wordsToLearn.size != index + 1) {
@@ -82,7 +88,7 @@ class HttpTrainService(
     override fun currentWord(): Single<TrainService.Word> =
         Single.fromCallable {
             val page = pages[currentPageIndex]
-            val wordPos = page[currentWordIndexRelativePage]
+            val wordPos = page[currentWordIndexRelativePage].wordIndex
             wordsToLearn[wordPos]
         }
 
@@ -92,7 +98,14 @@ class HttpTrainService(
             val page = pages[currentPageIndex]
 
             if (currentWordIndexRelativePage >= page.size) {
-                nextPage()
+                page.removeAll { it.isRight }
+
+                if (page.isEmpty()) {
+                    nextPage()
+                } else {
+                    pages[currentPageIndex].shuffle()
+                    currentWordIndexRelativePage = 0
+                }
             }
         }
             .flatMap { currentWord() }
@@ -101,7 +114,7 @@ class HttpTrainService(
         currentPageIndex += 1
 
         if (currentPageIndex >= pages.size) {
-            currentPageIndex = 0
+            currentPageIndex -= 1
             finishEvents.onNext(true)
             return
         }
@@ -110,21 +123,33 @@ class HttpTrainService(
         newPageEventsSubject.onNext(true)
     }
 
-    override fun right(): Single<TrainService.WordStatus> =
-        Single.just(
-            TrainService.WordStatus(
-                pos = currentWordIndexRelativePage,
-                isRight = true
-            )
-        )
+    override fun right(): Single<TrainService.WordStatus> {
+        val page = pages[currentPageIndex]
+        val word = page[currentWordIndexRelativePage]
 
-    override fun wrong(): Single<TrainService.WordStatus> =
-        Single.just(
-            TrainService.WordStatus(
-                pos = currentWordIndexRelativePage,
-                isRight = false
-            )
-        )
+        return scoreService.rightWord(mode, wordsToLearn[word.wordIndex].ref)
+            .toSingle {
+                page[currentWordIndexRelativePage] = word.copy(isRight = true)
+
+                TrainService.WordStatus(
+                    pos = word.indexInPage,
+                    isRight = true
+                )
+            }
+    }
+
+    override fun wrong(): Single<TrainService.WordStatus> {
+        val page = pages[currentPageIndex]
+        val word = page[currentWordIndexRelativePage]
+
+        return scoreService.wrongWord(mode, wordsToLearn[word.wordIndex].ref)
+            .toSingle {
+                TrainService.WordStatus(
+                    pos = word.indexInPage,
+                    isRight = false
+                )
+            }
+    }
 
     override fun reveal(): Single<WordsService.WordDetails> =
         currentWord().flatMap {

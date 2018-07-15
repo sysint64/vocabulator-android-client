@@ -21,8 +21,12 @@ fun dependencies(context: Context) = Kodein.Module {
 
     bind<WordsService>() with singleton { HttpWordsService(instance<Client>() as HttpClient) }
     bind<TrainService>() with singleton {
-        HttpTrainService(instance<Client>() as HttpClient,
-            wordsService = instance()
+        HttpTrainService(
+            wordsService = instance(),
+            scoreService = instance()
         )
+    }
+    bind<ScoreService>() with singleton {
+        HttpScoreService()
     }
 }

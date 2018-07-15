@@ -5,6 +5,11 @@ import io.reactivex.Single
 import io.reactivex.subjects.Subject
 
 interface TrainService {
+    enum class Mode {
+        WORD_TRANSLATION,
+        TRANSLATION_WORD
+    }
+
     fun startWordTranslation(categoryRef: String): Completable
 
     fun startTranslationWord(categoryRef: String): Completable

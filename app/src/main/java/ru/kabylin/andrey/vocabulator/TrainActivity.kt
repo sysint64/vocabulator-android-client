@@ -16,11 +16,12 @@ import ru.kabylin.andrey.vocabulator.client.RequestState
 import ru.kabylin.andrey.vocabulator.ext.hideView
 import ru.kabylin.andrey.vocabulator.ext.showView
 import ru.kabylin.andrey.vocabulator.ext.subscribeOnSuccess
-import ru.kabylin.andrey.vocabulator.router.Router
 import ru.kabylin.andrey.vocabulator.services.TrainService
 import ru.kabylin.andrey.vocabulator.services.WordsService
 import ru.kabylin.andrey.vocabulator.views.*
 import java.util.concurrent.TimeUnit
+import android.view.animation.AnimationUtils
+import ru.kabylin.andrey.vocabulator.views.anim.BounceInterpolator
 
 class TrainActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
     override val kodeinContext = kcontext(this)
@@ -33,6 +34,13 @@ class TrainActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
     private val trainService: TrainService by instance()
 
     private val items = ArrayList<WordDetailsItemVariant>()
+
+    private val bounceAnim by lazy {
+        val anim = AnimationUtils.loadAnimation(this, R.anim.bounce)
+        val interpolator = BounceInterpolator(0.2, 20.0)
+        anim.interpolator = interpolator
+        anim
+    }
 
     private val recyclerAdapter by lazy {
         WordDetailsAdapter(this, items)
@@ -120,8 +128,10 @@ class TrainActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
     }
 
     private fun newPage() {
-        for (imageView in wordStatusViews)
+        for (imageView in wordStatusViews) {
             imageView.setImageResource(R.drawable.ic_checkbox_blank_circle_outline)
+            imageView.clearAnimation()
+        }
     }
 
     private fun updateWordStatus(wordStatus: TrainService.WordStatus) {
@@ -132,6 +142,8 @@ class TrainActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
         } else {
             imageView.setImageResource(R.drawable.ic_close_circle)
         }
+
+        imageView.startAnimation(bounceAnim)
     }
 
     private fun updateCurrentWordView() {
