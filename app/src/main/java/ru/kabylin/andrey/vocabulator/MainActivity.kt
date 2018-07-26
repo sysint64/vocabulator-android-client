@@ -8,14 +8,14 @@ import org.kodein.di.android.closestKodein
 import org.kodein.di.generic.instance
 import org.kodein.di.generic.kcontext
 import ru.kabylin.andrey.vocabulator.client.Client
-import ru.kabylin.andrey.vocabulator.router.Router
 import ru.kabylin.andrey.vocabulator.services.WordsService
 import ru.kabylin.andrey.vocabulator.client.ClientResponse
 import ru.kabylin.andrey.vocabulator.client.RequestState
 import ru.kabylin.andrey.vocabulator.ext.hideView
 import ru.kabylin.andrey.vocabulator.ext.showView
 import android.support.v7.widget.helper.ItemTouchHelper
-import ru.kabylin.andrey.vocabulator.ext.createBundle
+import android.view.Menu
+import android.view.MenuItem
 import ru.kabylin.andrey.vocabulator.holders.CategoryCardHolder
 import ru.kabylin.andrey.vocabulator.views.*
 
@@ -82,4 +82,17 @@ class MainActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
             RequestState.FINISHED -> progressBar.hideView()
         }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.toolbar_menu_sync, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) =
+        when (item.itemId) {
+            R.id.menu_sync -> {
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
 }
