@@ -22,7 +22,7 @@ class WordListActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware
 
     override val router = WordsRouter(this)
     override val client: Client by instance()
-    override val viewState by lazy { ClientViewState(client, this) }
+    override val viewState by lazy { ClientViewState(client, this, lifecycle) }
 
     private val wordsService: WordsService by instance()
     private val trainService: TrainService by instance()

@@ -1,5 +1,6 @@
 package ru.kabylin.andrey.vocabulator.views
 
+import android.arch.lifecycle.Lifecycle
 import android.os.Bundle
 import io.reactivex.disposables.CompositeDisposable
 import ru.kabylin.andrey.vocabulator.client.*
@@ -13,8 +14,8 @@ interface ClientCallbacks : ErrorsListener, RequestStateListener {
     fun onSessionError(error: SessionError?)
 }
 
-open class ClientViewState(val client: Client, aware: ViewStateAware)
-    : ViewState(aware), ErrorsListener
+open class ClientViewState(val client: Client, aware: ViewStateAware, lifecycle: Lifecycle)
+    : ViewState(aware, lifecycle), ErrorsListener
 {
     var compositeDisposable = CompositeDisposable()
     var error: Throwable? = null
@@ -23,6 +24,11 @@ open class ClientViewState(val client: Client, aware: ViewStateAware)
         get() = aware as ClientCallbacks
 
     override fun subscribe() {
+        super.subscribe()
+
+//        if (!isEnabled)
+//            return
+
         client.criticalErrors
             .subscribe(::defaultCriticalErrorBehavior)
             .disposeBy(compositeDisposable)
@@ -42,6 +48,7 @@ open class ClientViewState(val client: Client, aware: ViewStateAware)
     }
 
     override fun unsubscribe() {
+        super.unsubscribe()
         compositeDisposable.clear()
     }
 

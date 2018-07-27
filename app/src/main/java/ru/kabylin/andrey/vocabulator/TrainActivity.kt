@@ -21,6 +21,7 @@ import ru.kabylin.andrey.vocabulator.services.WordsService
 import ru.kabylin.andrey.vocabulator.views.*
 import java.util.concurrent.TimeUnit
 import android.view.animation.AnimationUtils
+import ru.kabylin.andrey.vocabulator.ext.disposeBy
 import ru.kabylin.andrey.vocabulator.views.anim.BounceInterpolator
 
 class TrainActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
@@ -29,7 +30,7 @@ class TrainActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
 
     override val router = WordsRouter(this)
     override val client: Client by instance()
-    override val viewState by lazy { ClientViewState(client, this) }
+    override val viewState by lazy { ClientViewState(client, this, lifecycle) }
 
     private val trainService: TrainService by instance()
 
@@ -80,9 +81,11 @@ class TrainActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
         // Events
         trainService.newPageEvents()
             .subscribe { newPage() }
+            .disposeBy(lifecycleDisposer)
 
         trainService.finishEvents()
             .subscribe { finish() }
+            .disposeBy(lifecycleDisposer)
     }
 
     private fun initButtons() {

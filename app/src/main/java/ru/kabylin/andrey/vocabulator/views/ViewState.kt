@@ -1,9 +1,13 @@
 package ru.kabylin.andrey.vocabulator.views
 
 import android.app.Activity
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleObserver
+import android.arch.lifecycle.OnLifecycleEvent
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.annotation.CallSuper
 
 interface ScreenTransitionEnum
 
@@ -62,12 +66,35 @@ data class ScreenTransition<out T : ScreenTransitionEnum>(
     }
 }
 
-open class ViewState(protected val aware: ViewStateAware) {
+open class ViewState(protected val aware: ViewStateAware, private val lifecycle: Lifecycle) : LifecycleObserver {
+
     var screenTransition: ScreenTransition<*>? = null
 
-    open fun subscribe() {}
+    protected var isEnabled = false
+        private set
 
-    open fun unsubscribe() {}
+    protected var isAttached = false
+        private set
+
+    init {
+        lifecycle.addObserver(this)
+    }
+
+    @CallSuper
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    open fun subscribe() {
+        if (isEnabled) {
+            isAttached = true
+            aware.viewStateRefresh()
+        }
+    }
+
+    @CallSuper
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    open fun unsubscribe() {
+        isAttached = false
+        aware.unsubscribe()
+    }
 
     fun <T : ScreenTransitionEnum> gotoScreen(screen: T) {
         screenTransition = ScreenTransition(screen)
@@ -77,5 +104,14 @@ open class ViewState(protected val aware: ViewStateAware) {
     fun <T : ScreenTransitionEnum> gotoScreen(screen: T, bundle: Bundle) {
         screenTransition = ScreenTransition(screen, bundle)
         aware.router?.transitionUpdate(screenTransition)
+    }
+
+    fun enable() {
+        isEnabled = true
+
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
+            if (!isAttached)
+                subscribe()
+        }
     }
 }

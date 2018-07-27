@@ -16,6 +16,8 @@ interface ViewStateAware {
         router?.transitionUpdate(viewState?.screenTransition)
     }
 
+    fun unsubscribe() {}
+
     fun <T : ScreenTransitionEnum> gotoScreen(screen: T) {
         viewState?.screenTransition = ScreenTransition(screen)
         router?.transitionUpdate(viewState?.screenTransition)

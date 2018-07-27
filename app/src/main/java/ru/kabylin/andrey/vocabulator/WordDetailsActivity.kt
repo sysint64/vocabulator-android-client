@@ -27,7 +27,7 @@ class WordDetailsActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAw
 
     override val router = WordsRouter(this)
     override val client: Client by instance()
-    override val viewState by lazy { ClientViewState(client, this) }
+    override val viewState by lazy { ClientViewState(client, this, lifecycle) }
 
     private val wordsService: WordsService by instance()
     private val items = ArrayList<WordDetailsItemVariant>()

@@ -1,20 +1,17 @@
 package ru.kabylin.andrey.vocabulator.views
 
+import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import io.reactivex.disposables.CompositeDisposable
 
 abstract class ViewStateAppCompatActivity<out T : ViewState> : AppCompatActivity(), ViewStateAware {
     abstract override val viewState: T
+    protected val lifecycleDisposer = CompositeDisposable()
 
-    override fun onResume() {
-        super.onResume()
-        viewState.subscribe()
-        viewStateRefresh()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        viewState.unsubscribe()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewState.enable()
     }
 
     override fun onOptionsItemSelected(item: MenuItem) =
@@ -25,4 +22,9 @@ abstract class ViewStateAppCompatActivity<out T : ViewState> : AppCompatActivity
             }
             else -> super.onOptionsItemSelected(item)
         }
+
+    override fun unsubscribe() {
+        super.unsubscribe()
+        lifecycleDisposer.clear()
+    }
 }
