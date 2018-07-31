@@ -17,10 +17,6 @@ class HttpSyncService(
 ) : SyncService {
 
     interface ApiGateway {
-        data class SyncRequest(
-            val lastSync: Long
-        )
-
         @GET("sync/")
         fun sync(): Single<SyncResponse>
     }

@@ -36,7 +36,7 @@ android {
         Properties properties = new Properties()
         properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
-        def apiEndpoint = properties.getOrDefault('api.endpoint', '"http://35.237.116.16/api/v1/"')
+        def apiEndpoint = properties.getOrDefault('api.endpoint', '"http://10.0.3.2:12345/api/"')
         buildConfigField("String", "API_ENDPOINT", apiEndpoint)
     }
     buildTypes {
