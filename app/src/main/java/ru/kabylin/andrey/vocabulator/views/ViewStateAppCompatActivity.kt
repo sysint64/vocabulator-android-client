@@ -7,11 +7,18 @@ import io.reactivex.disposables.CompositeDisposable
 
 abstract class ViewStateAppCompatActivity<out T : ViewState> : AppCompatActivity(), ViewStateAware {
     abstract override val viewState: T
-    protected val lifecycleDisposer = CompositeDisposable()
+
+    val lifecycleDisposer: CompositeDisposable
+        get() = viewState.lifecycleDisposer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewState.enable()
+    }
+
+    override fun onPostResume() {
+        super.onPostResume()
+        viewStateRefresh()
     }
 
     override fun onOptionsItemSelected(item: MenuItem) =
@@ -22,9 +29,4 @@ abstract class ViewStateAppCompatActivity<out T : ViewState> : AppCompatActivity
             }
             else -> super.onOptionsItemSelected(item)
         }
-
-    override fun unsubscribe() {
-        super.unsubscribe()
-        lifecycleDisposer.clear()
-    }
 }

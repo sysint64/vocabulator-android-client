@@ -17,7 +17,6 @@ interface ClientCallbacks : ErrorsListener, RequestStateListener {
 open class ClientViewState(val client: Client, aware: ViewStateAware, lifecycle: Lifecycle)
     : ViewState(aware, lifecycle), ErrorsListener
 {
-    var compositeDisposable = CompositeDisposable()
     var error: Throwable? = null
 
     private val clientCallbacks
@@ -26,30 +25,25 @@ open class ClientViewState(val client: Client, aware: ViewStateAware, lifecycle:
     override fun subscribe() {
         super.subscribe()
 
-//        if (!isEnabled)
-//            return
+        if (!isEnabled)
+            return
 
         client.criticalErrors
             .subscribe(::defaultCriticalErrorBehavior)
-            .disposeBy(compositeDisposable)
+            .disposeBy(lifecycleDisposer)
 
         client.accessErrors
             .subscribe(::defaultAccessErrorBehavior)
-            .disposeBy(compositeDisposable)
+            .disposeBy(lifecycleDisposer)
 
         client.subscriberOnErrors(this)
-            .disposeBy(compositeDisposable)
+            .disposeBy(lifecycleDisposer)
 
         client.requestState.subscribe { (clientCallbacks as RequestStateListener).onRequestStateUpdated(it) }
-            .disposeBy(compositeDisposable)
+            .disposeBy(lifecycleDisposer)
 
         client.subscriberOnErrors(clientCallbacks)
-            .disposeBy(compositeDisposable)
-    }
-
-    override fun unsubscribe() {
-        super.unsubscribe()
-        compositeDisposable.clear()
+            .disposeBy(lifecycleDisposer)
     }
 
     open fun clearErrors() {

@@ -4,6 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.subjects.Subject
 
+
 interface TrainService {
     enum class Mode {
         WORD_TRANSLATION,

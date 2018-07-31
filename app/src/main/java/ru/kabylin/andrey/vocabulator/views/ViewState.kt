@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.CallSuper
+import io.reactivex.disposables.CompositeDisposable
 
 interface ScreenTransitionEnum
 
@@ -68,6 +69,7 @@ data class ScreenTransition<out T : ScreenTransitionEnum>(
 
 open class ViewState(protected val aware: ViewStateAware, private val lifecycle: Lifecycle) : LifecycleObserver {
 
+    var lifecycleDisposer = CompositeDisposable()
     var screenTransition: ScreenTransition<*>? = null
 
     protected var isEnabled = false
@@ -85,7 +87,6 @@ open class ViewState(protected val aware: ViewStateAware, private val lifecycle:
     open fun subscribe() {
         if (isEnabled) {
             isAttached = true
-            aware.viewStateRefresh()
         }
     }
 
@@ -94,6 +95,7 @@ open class ViewState(protected val aware: ViewStateAware, private val lifecycle:
     open fun unsubscribe() {
         isAttached = false
         aware.unsubscribe()
+        lifecycleDisposer.clear()
     }
 
     fun <T : ScreenTransitionEnum> gotoScreen(screen: T) {

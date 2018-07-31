@@ -1,3 +1,5 @@
+import org.yaml.snakeyaml.Yaml
+
 apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
@@ -8,24 +10,52 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 27
+
+    def version = new Yaml().load(file("version.yml").newInputStream())
+    def host = new Yaml().load(file("host.yml").newInputStream())
+
+    def mVersionName = "v${version.major_version}.${version.minor_version}.${version.version_patch}"
+
+    // Rename apk file
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            if (output.outputFile != null && output.outputFile.name.endsWith('.apk')) {
+                outputFileName = "Vocabulator-${mVersionName} (${version.version_number}) - ${variant.buildType.name.capitalize()}.apk"
+            }
+        }
+    }
+
     defaultConfig {
         applicationId "ru.kabylin.andrey.vocabulator"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 1
-        versionName "1.0"
+        versionCode version.version_number.toInteger()
+        versionName "${mVersionName}"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         Properties properties = new Properties()
         properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
-        def apiEndpoint = properties.getOrDefault('api.endpoint', '"http://35.237.116.16/api"')
+        def apiEndpoint = properties.getOrDefault('api.endpoint', '"http://35.237.116.16/api/v1/"')
         buildConfigField("String", "API_ENDPOINT", apiEndpoint)
     }
     buildTypes {
+        debug {
+            buildConfigField("String", "API_ENDPOINT", "\"${host.api.debug.endpoint}\"")
+            versionNameSuffix = " Build: ${version.version_number} - Debug"
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    flavorDimensions "tier"
+    productFlavors {
+        local {
+            dimension "tier"
+        }
+        http {
+            dimension "tier"
         }
     }
     testOptions {
@@ -72,6 +102,11 @@ dependencies {
 
     implementation "org.jetbrains.anko:anko-commons:$anko_version"
     implementation "org.jetbrains.anko:anko-sqlite:$anko_version"
+
+    // Social media
+    implementation "com.vk:androidsdk:1.6.9"
+    implementation 'com.facebook.android:facebook-login:4.35.0'
+    implementation 'com.google.android.gms:play-services-auth:15.0.1'
 
     // Appearance
     implementation 'com.github.bumptech.glide:glide:4.7.1'

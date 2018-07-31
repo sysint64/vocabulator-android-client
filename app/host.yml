@@ -1,0 +1,7 @@
+---
+api:
+  debug:
+    endpoint: "http://35.237.116.16/api/v1/"
+
+  production:
+    endpoint: "http://35.237.116.16/api/v1/"

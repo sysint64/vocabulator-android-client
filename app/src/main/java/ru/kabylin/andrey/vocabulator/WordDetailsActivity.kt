@@ -65,6 +65,9 @@ class WordDetailsActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAw
     private fun getDetails() {
         val query = wordsService.getWordDetails(ref)
 
+        wordTextView.text = ""
+        items.clear()
+
         client.execute(query) {
             val details = it.payload
             wordTextView.text = details.name

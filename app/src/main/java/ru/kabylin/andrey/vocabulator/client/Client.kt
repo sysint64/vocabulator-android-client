@@ -11,6 +11,7 @@ import ru.kabylin.andrey.vocabulator.compositors.Compositor
 import ru.kabylin.andrey.vocabulator.compositors.ErrorsCompositor
 import ru.kabylin.andrey.vocabulator.compositors.MergeCompositor
 import ru.kabylin.andrey.vocabulator.compositors.RequestStateCompositor
+import java.util.*
 import java.util.concurrent.LinkedBlockingQueue
 
 enum class RequestState {
@@ -86,6 +87,10 @@ open class Client {
 
     // Текущие не выполненные запросы
     private val currentRequests = ArrayList<ClientRequest>()
+
+    fun getIdForQuery(service: Any, method: Any): String {
+        return "${service.javaClass.name}.$method"
+    }
 
     fun subscriberOnErrors(listener: ErrorsListener): ErrorsSubscriber =
         ErrorsSubscriber(
