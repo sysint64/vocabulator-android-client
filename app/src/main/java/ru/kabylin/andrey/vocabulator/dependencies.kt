@@ -1,6 +1,7 @@
 package ru.kabylin.andrey.vocabulator
 
 import android.content.Context
+import org.jetbrains.anko.db.ManagedSQLiteOpenHelper
 import org.kodein.di.Kodein
 import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance
@@ -10,6 +11,7 @@ import ru.kabylin.andrey.vocabulator.client.Client
 import ru.kabylin.andrey.vocabulator.client.http.HttpClient
 import ru.kabylin.andrey.vocabulator.client.http.HttpClientCompositor
 import ru.kabylin.andrey.vocabulator.compositors.Compositor
+import ru.kabylin.andrey.vocabulator.database.SqlHelper
 import ru.kabylin.andrey.vocabulator.services.*
 
 fun dependencies(context: Context) = Kodein.Module {
@@ -19,7 +21,11 @@ fun dependencies(context: Context) = Kodein.Module {
     }
     bind<DataStorage>() with singleton { HttpClient.dataState }
 
-    bind<WordsService>() with singleton { HttpWordsService(instance<Client>() as HttpClient) }
+    bind<ManagedSQLiteOpenHelper>(tag = "storage") with provider {
+        SqlHelper.getInstance(context)
+    }
+
+    bind<WordsService>() with singleton { LocalWordsService(instance<Client>() as HttpClient) }
     bind<TrainService>() with singleton {
         HttpTrainService(
             wordsService = instance(),
@@ -27,6 +33,11 @@ fun dependencies(context: Context) = Kodein.Module {
         )
     }
     bind<ScoreService>() with singleton {
-        HttpScoreService()
+        LocalScoreService()
+    }
+    bind<SyncService>() with singleton {
+        HttpSyncService(instance<Client>() as HttpClient,
+            database = instance("storage")
+        )
     }
 }

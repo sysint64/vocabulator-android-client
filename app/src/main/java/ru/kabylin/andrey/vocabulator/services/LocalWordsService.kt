@@ -3,7 +3,7 @@ package ru.kabylin.andrey.vocabulator.services
 import io.reactivex.Single
 import ru.kabylin.andrey.vocabulator.client.http.HttpClient
 
-class HttpWordsService(client: HttpClient) : WordsService {
+class LocalWordsService(client: HttpClient) : WordsService {
     private val categories = listOf(
         WordsService.Category(
             ref = "1",
