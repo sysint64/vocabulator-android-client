@@ -1,6 +1,7 @@
 package ru.kabylin.andrey.vocabulator.services
 
 import io.reactivex.Single
+import ru.kabylin.andrey.vocabulator.models.TitleValue
 
 interface WordsService {
     data class Category(
@@ -13,11 +14,6 @@ interface WordsService {
         val ref: String,
         val name: String,
         val score: Int
-    )
-
-    data class TitleValue(
-        val title: String,
-        val value: String
     )
 
     data class WordDetails(

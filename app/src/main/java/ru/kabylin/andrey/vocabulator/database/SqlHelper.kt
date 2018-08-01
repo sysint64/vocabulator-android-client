@@ -26,6 +26,7 @@ class SqlHelper(context: Context) : ManagedSQLiteOpenHelper(
         db.transaction {
             db.createTable("Categories", true,
                 "id" to INTEGER + PRIMARY_KEY + AUTOINCREMENT,
+                "ref" to TEXT + NOT_NULL,
                 "name" to TEXT + NOT_NULL
             )
             db.createTable("Words", true,

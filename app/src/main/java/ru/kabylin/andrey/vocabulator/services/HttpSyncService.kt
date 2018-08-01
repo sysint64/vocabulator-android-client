@@ -9,6 +9,8 @@ import ru.kabylin.andrey.vocabulator.Settings
 import ru.kabylin.andrey.vocabulator.client.http.HttpClient
 import ru.kabylin.andrey.vocabulator.ext.add
 import ru.kabylin.andrey.vocabulator.ext.now
+import ru.kabylin.andrey.vocabulator.models.SyncResponse
+import ru.kabylin.andrey.vocabulator.models.fromSyncResponseToSyncDatabaseModel
 import java.util.*
 
 class HttpSyncService(
@@ -29,6 +31,7 @@ class HttpSyncService(
 
     override fun sync(): Completable =
         apiGateway.sync()
+            .map(::fromSyncResponseToSyncDatabaseModel)
             .map { response ->
                 database.use {
                     transaction {
