@@ -31,7 +31,7 @@ fun dependencies(context: Context) = Kodein.Module {
         )
     }
     bind<TrainService>() with singleton {
-        HttpTrainService(
+        RealTrainService(
             wordsService = instance(),
             scoreService = instance()
         )

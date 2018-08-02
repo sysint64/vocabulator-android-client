@@ -10,6 +10,9 @@ data class WordDatabaseModel(
     @ColumnInfo(name = "ref")
     val ref: String,
 
+    @ColumnInfo(name = "category_ref")
+    val categoryRef: String,
+
     @ColumnInfo(name = "name")
     val name: String,
 

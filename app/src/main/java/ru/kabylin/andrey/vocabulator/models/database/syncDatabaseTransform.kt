@@ -18,12 +18,16 @@ fun fromCategoryResponseToCategoryDatabaseModel(response: CategoryResponse): Cat
     )
 
 fun fromWordResponseToWordDatabaseModel(response: WordResponse): WordDatabaseModel {
-    val details = listOf(
-        DetailsDatabaseModel(
-            title = "Pronounce",
-            value = response.pronounce
+    val details = if (response.pronounce.isNotBlank()) {
+        listOf(
+            DetailsDatabaseModel(
+                title = "Pronounce",
+                value = response.pronounce
+            )
         )
-    )
+    } else {
+        listOf()
+    }
 
     val definitions = response.definitions.map {
         DefinitionDatabaseModel(
@@ -36,6 +40,7 @@ fun fromWordResponseToWordDatabaseModel(response: WordResponse): WordDatabaseMod
 
     return WordDatabaseModel(
         ref = response.id.toString(),
+        categoryRef = response.category.toString(),
         name = response.name,
         translations = response.translation,
         details = details,

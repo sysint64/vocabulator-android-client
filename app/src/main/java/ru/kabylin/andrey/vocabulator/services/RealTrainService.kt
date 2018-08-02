@@ -5,7 +5,7 @@ import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 
-class HttpTrainService(
+class RealTrainService(
     val wordsService: WordsService,
     val scoreService: ScoreService
 ) : TrainService {

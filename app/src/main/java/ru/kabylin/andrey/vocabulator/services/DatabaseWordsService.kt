@@ -5,28 +5,25 @@ import ru.kabylin.andrey.vocabulator.database.SyncDatabase
 
 class DatabaseWordsService(private val database: SyncDatabase) : WordsService {
     override fun getCategories(): Single<List<WordsService.Category>> =
-        Single.fromCallable {
-            database.dao().getAllCategories()
-        }
-            .map {
-                it.map {
-                    WordsService.Category(
-                        ref = it.ref,
-                        name = it.name,
-                        image = null
+        Single.fromCallable { database.dao().getAllCategories() }
+            .map(::fromListCategoryDatabaseModelToListWordsServiceCategory)
+
+    override fun getWordsForCategory(categoryRef: String): Single<List<WordsService.Word>> =
+        Single.fromCallable { database.dao().getWordsForCategory(categoryRef) }
+            .map(::fromListWordDatabaseModelToListWordsServiceWord)
+
+    override fun getWordDetails(ref: String): Single<WordsService.WordDetails> =
+        Single.fromCallable { database.dao().getWord(ref) }
+            .map(::fromWordDatabaseModelToWordsServiceWordDetails)
+
+    override fun getScoresCounts(categoryRef: String): Single<List<WordsService.CategoryScore>> =
+        getWordsForCategory(categoryRef)
+            .map { words ->
+                (0..10).map { score ->
+                    WordsService.CategoryScore(
+                        score = score,
+                        count = words.count { it.score == score }
                     )
                 }
             }
-
-    override fun getWordsForCategory(categoryRef: String): Single<List<WordsService.Word>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getWordDetails(ref: String): Single<WordsService.WordDetails> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getScoresCounts(categoryRef: String): Single<List<WordsService.CategoryScore>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 }

@@ -18,4 +18,10 @@ interface DatabaseModelDao {
         insertAllCategories(data.categories)
         insertAllWords(data.words)
     }
+
+    @Query("SELECT * FROM words WHERE category_ref = :categoryRef")
+    fun getWordsForCategory(categoryRef: String): List<WordDatabaseModel>
+
+    @Query("SELECT * FROM words WHERE ref = :ref LIMIT 1")
+    fun getWord(ref: String): WordDatabaseModel
 }
