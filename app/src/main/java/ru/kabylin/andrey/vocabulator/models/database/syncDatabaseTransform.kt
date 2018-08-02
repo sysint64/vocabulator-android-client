@@ -1,7 +1,8 @@
-package ru.kabylin.andrey.vocabulator.models
+package ru.kabylin.andrey.vocabulator.models.database
 
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import ru.kabylin.andrey.vocabulator.models.http.CategoryResponse
+import ru.kabylin.andrey.vocabulator.models.http.SyncResponse
+import ru.kabylin.andrey.vocabulator.models.http.WordResponse
 
 fun fromSyncResponseToSyncDatabaseModel(response: SyncResponse): SyncDatabaseModel {
     val categories = response.categories.map(::fromCategoryResponseToCategoryDatabaseModel)
@@ -39,26 +40,5 @@ fun fromWordResponseToWordDatabaseModel(response: WordResponse): WordDatabaseMod
         translations = response.translation,
         details = details,
         definitions = definitions
-    )
-}
-
-fun fromCategoryRawDatabaseRowToCategoryDatabaseModel(map: Map<String, Any?>): CategoryDatabaseModel =
-    CategoryDatabaseModel(
-        ref = map["ref"] as String,
-        name = map["name"] as String
-    )
-
-fun fromWordRawDatabaseRowToWordDatabaseModel(map: Map<String, Any?>): WordDatabaseModel {
-    val gson = Gson()
-
-    val detailsDatabaseModelType = object : TypeToken<ArrayList<DetailsDatabaseModel>>() {}.type
-    val definitionDatabaseModelType = object : TypeToken<ArrayList<DefinitionDatabaseModel>>() {}.type
-
-    return WordDatabaseModel(
-        ref = map["ref"] as String,
-        name = map["ref"] as String,
-        translations = map["translations"] as String,
-        details = gson.fromJson(map["details"] as String, detailsDatabaseModelType),
-        definitions = gson.fromJson(map["definitions"] as String, definitionDatabaseModelType)
     )
 }

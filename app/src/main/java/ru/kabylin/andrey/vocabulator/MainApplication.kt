@@ -15,7 +15,6 @@ class MainApplication : Application(), KodeinAware {
         import(dependencies(this@MainApplication))
     }
 
-
     override fun onCreate() {
         super.onCreate()
 

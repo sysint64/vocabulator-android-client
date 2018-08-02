@@ -1,4 +1,4 @@
-package ru.kabylin.andrey.vocabulator.models
+package ru.kabylin.andrey.vocabulator.models.http
 
 data class SyncResponse(
     val categories: List<CategoryResponse>,

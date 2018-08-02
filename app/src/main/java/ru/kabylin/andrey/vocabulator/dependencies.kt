@@ -1,7 +1,7 @@
 package ru.kabylin.andrey.vocabulator
 
+import android.arch.persistence.room.Room
 import android.content.Context
-import org.jetbrains.anko.db.ManagedSQLiteOpenHelper
 import org.kodein.di.Kodein
 import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance
@@ -11,7 +11,7 @@ import ru.kabylin.andrey.vocabulator.client.Client
 import ru.kabylin.andrey.vocabulator.client.http.HttpClient
 import ru.kabylin.andrey.vocabulator.client.http.HttpClientCompositor
 import ru.kabylin.andrey.vocabulator.compositors.Compositor
-import ru.kabylin.andrey.vocabulator.database.SqlHelper
+import ru.kabylin.andrey.vocabulator.database.SyncDatabase
 import ru.kabylin.andrey.vocabulator.services.*
 
 fun dependencies(context: Context) = Kodein.Module {
@@ -21,11 +21,15 @@ fun dependencies(context: Context) = Kodein.Module {
     }
     bind<DataStorage>() with singleton { HttpClient.dataState }
 
-    bind<ManagedSQLiteOpenHelper>(tag = "storage") with provider {
-        SqlHelper.getInstance(context)
+    bind<SyncDatabase>(tag = "storage") with provider {
+        Room.databaseBuilder(context, SyncDatabase::class.java, "sync_storage").build()
     }
 
-    bind<WordsService>() with singleton { LocalWordsService(instance<Client>() as HttpClient) }
+    bind<WordsService>() with singleton {
+        DatabaseWordsService(
+            database = instance("storage")
+        )
+    }
     bind<TrainService>() with singleton {
         HttpTrainService(
             wordsService = instance(),

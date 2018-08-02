@@ -2,6 +2,7 @@ package ru.kabylin.andrey.vocabulator.services
 
 import io.reactivex.Single
 import ru.kabylin.andrey.vocabulator.client.http.HttpClient
+import ru.kabylin.andrey.vocabulator.models.TitleValue
 
 class LocalWordsService(client: HttpClient) : WordsService {
     private val categories = listOf(
@@ -68,7 +69,7 @@ class LocalWordsService(client: HttpClient) : WordsService {
                 ref = ref,
                 name = words.first { it.second.ref == ref }.second.name,
                 details = listOf(
-                    WordsService.TitleValue(
+                    TitleValue(
                         title = "Pronounce",
                         value = "ˈbrākˌTHro͞o"
                     )
