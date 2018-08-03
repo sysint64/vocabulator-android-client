@@ -40,7 +40,7 @@ fun dependencies(context: Context) = Kodein.Module {
         LocalScoreService()
     }
     bind<SyncService>() with singleton {
-        HttpSyncService(instance<Client>() as HttpClient,
+        GrpcSyncService(instance<Client>() as HttpClient,
             database = instance("storage")
         )
     }

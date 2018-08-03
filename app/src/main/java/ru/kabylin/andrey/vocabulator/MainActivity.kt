@@ -118,15 +118,10 @@ class MainActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
         }
 
     private fun sync() {
-        val query = Single.fromCallable {
-            val channel = ManagedChannelBuilder.forAddress("10.0.3.2", 50051).usePlaintext().build()
-            val stub = GreeterGrpc.newBlockingStub(channel)
-            val message = HelloRequest.newBuilder().setName("Hello!").build()
-            stub.sayHello(message)
-        }
+        val query = syncService.sync()
 
         client.execute(query) {
-            alert(it.payload.message).show()
+            viewStateRefresh()
         }
     }
 

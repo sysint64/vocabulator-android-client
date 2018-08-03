@@ -1,6 +1,7 @@
 package ru.kabylin.andrey.vocabulator.client.http
 
 import com.google.gson.Gson
+import io.grpc.ManagedChannelBuilder
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -22,6 +23,11 @@ object HttpClient : Client() {
     }
 
     val gson = Gson()
+    val grpcChannel by lazy {
+        ManagedChannelBuilder.forAddress("10.0.3.2", 50051)
+            .usePlaintext()
+            .build()
+    }
 
     private fun retrofitBuilder(endpoint: String): Retrofit.Builder {
         return Retrofit.Builder()
