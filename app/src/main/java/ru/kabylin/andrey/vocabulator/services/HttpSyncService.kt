@@ -34,6 +34,7 @@ class HttpSyncService(
             .map { databaseData ->
                 Settings.nextSync = now().add(1, Calendar.DAY_OF_MONTH).time
                 database.dao().insertAll(databaseData)
+                // TODO: Синхронизация удаленных слов.
             }
             .toCompletable()
 }

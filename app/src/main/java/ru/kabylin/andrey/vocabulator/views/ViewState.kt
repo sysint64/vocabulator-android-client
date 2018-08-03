@@ -83,7 +83,7 @@ open class ViewState(protected val aware: ViewStateAware, private val lifecycle:
     }
 
     @CallSuper
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     open fun subscribe() {
         if (isEnabled) {
             isAttached = true
@@ -91,7 +91,7 @@ open class ViewState(protected val aware: ViewStateAware, private val lifecycle:
     }
 
     @CallSuper
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     open fun unsubscribe() {
         isAttached = false
         aware.unsubscribe()

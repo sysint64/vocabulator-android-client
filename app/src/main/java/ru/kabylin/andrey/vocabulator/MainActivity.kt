@@ -14,12 +14,17 @@ import ru.kabylin.andrey.vocabulator.client.RequestState
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.Menu
 import android.view.MenuItem
+import io.grpc.ManagedChannelBuilder
+import io.grpc.examples.helloworld.GreeterGrpc
 import ru.kabylin.andrey.vocabulator.ext.*
 import ru.kabylin.andrey.vocabulator.holders.CategoryCardHolder
 import ru.kabylin.andrey.vocabulator.services.SyncService
 import ru.kabylin.andrey.vocabulator.tools.isNetworkAvailable
 import ru.kabylin.andrey.vocabulator.views.*
 import java.util.*
+import io.grpc.examples.helloworld.HelloRequest
+import io.reactivex.Single
+import org.jetbrains.anko.alert
 
 class MainActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
     override val kodeinContext = kcontext(this)
@@ -113,9 +118,15 @@ class MainActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
         }
 
     private fun sync() {
-        val query = syncService.sync()
+        val query = Single.fromCallable {
+            val channel = ManagedChannelBuilder.forAddress("10.0.3.2", 50051).usePlaintext().build()
+            val stub = GreeterGrpc.newBlockingStub(channel)
+            val message = HelloRequest.newBuilder().setName("Hello!").build()
+            stub.sayHello(message)
+        }
+
         client.execute(query) {
-            viewStateRefresh()
+            alert(it.payload.message).show()
         }
     }
 

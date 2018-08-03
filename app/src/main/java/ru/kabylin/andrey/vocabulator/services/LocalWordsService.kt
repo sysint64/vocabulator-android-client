@@ -1,10 +1,9 @@
 package ru.kabylin.andrey.vocabulator.services
 
 import io.reactivex.Single
-import ru.kabylin.andrey.vocabulator.client.http.HttpClient
 import ru.kabylin.andrey.vocabulator.models.TitleValue
 
-class LocalWordsService(client: HttpClient) : WordsService {
+class LocalWordsService : WordsService {
     private val categories = listOf(
         WordsService.Category(
             ref = "1",

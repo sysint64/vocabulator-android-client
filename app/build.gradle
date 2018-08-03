@@ -2,6 +2,8 @@ import org.yaml.snakeyaml.Yaml
 
 apply plugin: 'com.android.application'
 
+apply plugin: 'com.google.protobuf'
+
 apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
@@ -65,14 +67,35 @@ android {
     }
 }
 
-dependencies {
-    def support_lib_version = "27.1.1"
-    def retrofit_version = "2.3.0"
-    def anko_version = "0.10.3"
-    def lifecycle_version = "1.1.1"
-    def nav_version = "1.0.0-alpha04"
-    def room_version = "1.1.1"
+def support_lib_version = "27.1.1"
+def retrofit_version = "2.3.0"
+def anko_version = "0.10.3"
+def lifecycle_version = "1.1.1"
+def nav_version = "1.0.0-alpha04"
+def room_version = "1.1.1"
+def grpc_version = "1.14.0"
 
+protobuf {
+    protoc { artifact = 'com.google.protobuf:protoc:3.5.1-1' }
+    plugins {
+        javalite { artifact = "com.google.protobuf:protoc-gen-javalite:3.0.0" }
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:$grpc_version" // CURRENT_GRPC_VERSION
+        }
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.plugins {
+                javalite {}
+                grpc { // Options added to --grpc_out
+                    option 'lite'
+                }
+            }
+        }
+    }
+}
+
+dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "com.android.support:appcompat-v7:$support_lib_version"
@@ -96,6 +119,11 @@ dependencies {
     implementation "com.chibatching.kotpref:kotpref:2.5.0"
     implementation "com.chibatching.kotpref:enum-support:2.5.0"
     implementation 'com.chibatching.kotpref:gson-support:2.5.0'
+
+    implementation "io.grpc:grpc-okhttp:$grpc_version"
+    implementation "io.grpc:grpc-protobuf-lite:$grpc_version"
+    implementation "io.grpc:grpc-stub:$grpc_version"
+    implementation "javax.annotation:javax.annotation-api:1.2"
 
     // Architecture Components
     implementation "android.arch.lifecycle:runtime:$lifecycle_version"
