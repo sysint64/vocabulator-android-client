@@ -36,13 +36,6 @@ class TrainActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
 
     private val items = ArrayList<WordDetailsItemVariant>()
 
-    private val bounceAnim by lazy {
-        val anim = AnimationUtils.loadAnimation(this, R.anim.bounce)
-        val interpolator = BounceInterpolator(0.2, 20.0)
-        anim.interpolator = interpolator
-        anim
-    }
-
     private val recyclerAdapter by lazy {
         WordDetailsAdapter(this, items)
     }
@@ -145,6 +138,10 @@ class TrainActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
         } else {
             imageView.setImageResource(R.drawable.ic_close_circle)
         }
+
+        val bounceAnim = AnimationUtils.loadAnimation(this, R.anim.bounce)
+        val interpolator = BounceInterpolator(0.2, 20.0)
+        bounceAnim.interpolator = interpolator
 
         imageView.startAnimation(bounceAnim)
     }

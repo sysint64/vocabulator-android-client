@@ -30,7 +30,7 @@ class RealTrainService(
     private var currentWordIndexRelativePage = 0
 
     private fun getWords(categoryRef: String): Single<List<TrainService.Word>> =
-        wordsService.getWordsForCategory(categoryRef)
+        wordsService.getTrainWordsForCategory(categoryRef)
             .map {
                 it.map {
                     TrainService.Word(
@@ -75,7 +75,7 @@ class RealTrainService(
             currentPage.add(WordInPage(accumulator, false, index))
             accumulator += 1
 
-            if (accumulator >= PAGE_SIZE && wordsToLearn.size != index + 1) {
+            if (accumulator > PAGE_SIZE && wordsToLearn.size != index + 1) {
                 accumulator = 0
                 currentPage = ArrayList()
                 pages.add(currentPage)

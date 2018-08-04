@@ -46,8 +46,12 @@ class DatabaseScoreService(
     override fun rightWord(mode: TrainService.Mode, wordRef: String): Completable =
         wordsService.getScoreForWord(wordRef)
             .flatMapCompletable {
-                val delta = rightDeltas[getNormalizedScore(it)] ?: 3
-                updateScore(wordRef, it + delta)
+                if (it == 0) {
+                    updateScore(wordRef, 90)
+                } else {
+                    val delta = rightDeltas[getNormalizedScore(it)] ?: 3
+                    updateScore(wordRef, it + delta)
+                }
             }
 
     override fun wrongWord(mode: TrainService.Mode, wordRef: String): Completable =

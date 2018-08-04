@@ -24,7 +24,7 @@ object HttpClient : Client() {
 
     val gson = Gson()
     val grpcChannel by lazy {
-        ManagedChannelBuilder.forAddress("10.0.3.2", 50051)
+        ManagedChannelBuilder.forAddress(BuildConfig.GRPC_ENDPOINT, BuildConfig.GRPC_PORT)
             .usePlaintext()
             .build()
     }

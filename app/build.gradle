@@ -40,6 +40,12 @@ android {
 
         def apiEndpoint = properties.getOrDefault('api.endpoint', '"http://10.0.3.2:12345/api/"')
         buildConfigField("String", "API_ENDPOINT", apiEndpoint)
+
+        def grpcEndpoint = properties.getOrDefault('grpc.endpoint', '"10.0.3.2"')
+        def grpcPort = properties.getOrDefault('grpc.port', '50051')
+
+        buildConfigField("String", "GRPC_ENDPOINT", grpcEndpoint)
+        buildConfigField("Integer", "GRPC_PORT", grpcPort)
     }
     buildTypes {
         debug {

@@ -35,6 +35,8 @@ interface WordsService {
 
     fun getWordsForCategory(categoryRef: String): Single<List<Word>>
 
+    fun getTrainWordsForCategory(categoryRef: String): Single<List<Word>>
+
     fun getWordDetails(ref: String): Single<WordDetails>
 
     data class CategoryScore(

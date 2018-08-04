@@ -51,6 +51,9 @@ class LocalWordsService : WordsService {
                 .map { it.second }
         )
 
+    override fun getTrainWordsForCategory(categoryRef: String): Single<List<WordsService.Word>> =
+        getWordsForCategory(categoryRef)
+
     override fun getScoresCounts(categoryRef: String): Single<List<WordsService.CategoryScore>> =
         getWordsForCategory(categoryRef)
             .map { words ->

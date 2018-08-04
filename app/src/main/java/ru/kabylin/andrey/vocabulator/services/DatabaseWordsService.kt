@@ -11,7 +11,20 @@ class DatabaseWordsService(private val database: SyncDatabase) : WordsService {
     override fun getWordsForCategory(categoryRef: String): Single<List<WordsService.Word>> =
         Single.fromCallable { database.dao().getWordsForCategory(categoryRef) }
             .map(::fromListWordDatabaseModelToListWordsServiceWord)
-            .map { it.sortedBy { it.score } }
+            .map {
+                it.sortedBy {
+                    if (it.score == 0) 10 else it.score
+                }
+            }
+
+    override fun getTrainWordsForCategory(categoryRef: String): Single<List<WordsService.Word>> =
+        Single.fromCallable { database.dao().getWordsForCategory(categoryRef) }
+            .map(::fromListWordDatabaseModelToListWordsServiceWord)
+            .map {
+                it.sortedBy {
+                    if (it.score == 0) 5 else it.score
+                }
+            }
 
     override fun getWordDetails(ref: String): Single<WordsService.WordDetails> =
         Single.fromCallable { database.dao().getWord(ref) }
