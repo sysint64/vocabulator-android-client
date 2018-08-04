@@ -23,7 +23,13 @@ data class WordDatabaseModel(
     val details: List<DetailsDatabaseModel>,
 
     @ColumnInfo(name = "definitions")
-    val definitions: List<DefinitionDatabaseModel>
+    val definitions: List<DefinitionDatabaseModel>,
+
+    @ColumnInfo(name = "score")
+    val score: Int,
+
+    @ColumnInfo(name = "lastScore")
+    val lastScore: Int
 )
 
 data class DefinitionDatabaseModel(

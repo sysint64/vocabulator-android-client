@@ -24,4 +24,7 @@ interface DatabaseModelDao {
 
     @Query("SELECT * FROM words WHERE ref = :ref LIMIT 1")
     fun getWord(ref: String): WordDatabaseModel
+
+    @Query("SELECT * FROM words")
+    fun getAllWords(): List<WordDatabaseModel>
 }

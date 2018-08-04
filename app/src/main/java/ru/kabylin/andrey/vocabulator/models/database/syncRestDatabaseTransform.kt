@@ -44,6 +44,8 @@ fun fromWordResponseToWordDatabaseModel(response: WordResponse): WordDatabaseMod
         name = response.name,
         translations = response.translation,
         details = details,
-        definitions = definitions
+        definitions = definitions,
+        score = 0,
+        lastScore = 0
     )
 }

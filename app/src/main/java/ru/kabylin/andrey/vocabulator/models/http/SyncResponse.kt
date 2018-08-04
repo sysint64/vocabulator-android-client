@@ -16,7 +16,8 @@ data class WordResponse(
     val name: String,
     val translation: String,
     val pronounce: String,
-    val definitions: List<DefinitionResponse>
+    val definitions: List<DefinitionResponse>,
+    val score: Int
 )
 
 data class DefinitionResponse(

@@ -4,6 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import ru.kabylin.andrey.grpc.sync.SyncGrpcRequest
 import ru.kabylin.andrey.grpc.sync.SyncGrpc
+import ru.kabylin.andrey.grpc.sync.WordGrpcRequest
 import ru.kabylin.andrey.vocabulator.Settings
 import ru.kabylin.andrey.vocabulator.client.http.HttpClient
 import ru.kabylin.andrey.vocabulator.database.SyncDatabase
@@ -20,9 +21,25 @@ class GrpcSyncService(
     override fun sync(): Completable =
         Single.fromCallable {
             val stub = SyncGrpc.newBlockingStub(client.grpcChannel)
-            val request = SyncGrpcRequest.newBuilder().build()
+            val request = SyncGrpcRequest.newBuilder()
+            var index = 0
 
-            stub.sync(request)
+            for (word in database.dao().getAllWords()) {
+                val delta = word.lastScore - word.score
+
+                if (delta == 0)
+                    continue
+
+                val wordRequest = WordGrpcRequest.newBuilder()
+                    .setId(word.ref.toLong())
+                    .setScoreDelta(delta)
+                    .build()
+
+                request.addWords(index, wordRequest)
+                index += 1
+            }
+
+            stub.sync(request.build())
         }
             .map(::fromSyncGrpcResponseToSyncDatabaseModel)
             .map { databaseData ->

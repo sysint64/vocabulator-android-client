@@ -44,6 +44,8 @@ fun fromWordGrpcResponseToWordDatabaseModel(response: WordGrpcResponse): WordDat
         name = response.name,
         translations = response.translations,
         details = details,
-        definitions = definitions
+        definitions = definitions,
+        score = response.score.toInt(),
+        lastScore = response.score.toInt()
     )
 }
