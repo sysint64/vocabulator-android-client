@@ -27,4 +27,9 @@ class DatabaseWordsService(private val database: SyncDatabase) : WordsService {
                     )
                 }
             }
+
+    override fun getScoreForWord(wordRef: String): Single<Int> =
+        Single.fromCallable {
+            database.dao().getWordScore(wordRef)
+        }
 }

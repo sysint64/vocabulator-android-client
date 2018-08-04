@@ -43,4 +43,6 @@ interface WordsService {
     )
 
     fun getScoresCounts(categoryRef: String): Single<List<CategoryScore>>
+
+    fun getScoreForWord(wordRef: String): Single<Int>
 }

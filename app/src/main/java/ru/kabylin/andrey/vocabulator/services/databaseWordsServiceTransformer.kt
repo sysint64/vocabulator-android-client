@@ -17,17 +17,19 @@ fun fromCategoryDatabaseModelToWordsServiceCategory(model: CategoryDatabaseModel
 fun fromListWordDatabaseModelToListWordsServiceWord(list: List<WordDatabaseModel>): List<WordsService.Word> =
     list.map(::fromWordDatabaseModelToWordsServiceWord)
 
-fun fromWordDatabaseModelToWordsServiceWord(model: WordDatabaseModel): WordsService.Word {
-    val score = if (model.score == 0) {
+fun getNormalizedScore(score: Int) =
+    if (score == 0) {
         0
     } else {
-        maxOf(model.score / 100, 1)
+        // Clamp value range in 1 to 10
+        minOf(maxOf(score / 10, 1), 10)
     }
 
+fun fromWordDatabaseModelToWordsServiceWord(model: WordDatabaseModel): WordsService.Word {
     return WordsService.Word(
         ref = model.ref,
         name = model.name,
-        score = score
+        score = getNormalizedScore(model.score)
     )
 }
 

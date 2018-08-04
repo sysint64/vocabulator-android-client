@@ -25,6 +25,12 @@ interface DatabaseModelDao {
     @Query("SELECT * FROM words WHERE ref = :ref LIMIT 1")
     fun getWord(ref: String): WordDatabaseModel
 
+    @Query("SELECT score FROM words WHERE ref = :ref LIMIT 1")
+    fun getWordScore(ref: String): Int
+
     @Query("SELECT * FROM words")
     fun getAllWords(): List<WordDatabaseModel>
+
+    @Query("UPDATE words SET score = :newScore  WHERE ref = :ref")
+    fun updateWordScore(ref: String, newScore: Int): Int
 }

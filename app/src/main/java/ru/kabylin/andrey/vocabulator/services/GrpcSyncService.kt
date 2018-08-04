@@ -25,7 +25,7 @@ class GrpcSyncService(
             var index = 0
 
             for (word in database.dao().getAllWords()) {
-                val delta = word.lastScore - word.score
+                val delta = word.score - word.lastScore
 
                 if (delta == 0)
                     continue

@@ -100,4 +100,7 @@ class LocalWordsService : WordsService {
                 )
             )
         )
+
+    override fun getScoreForWord(wordRef: String): Single<Int> =
+        Single.just(0)
 }

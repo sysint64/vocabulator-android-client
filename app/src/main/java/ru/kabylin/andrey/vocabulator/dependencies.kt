@@ -37,7 +37,10 @@ fun dependencies(context: Context) = Kodein.Module {
         )
     }
     bind<ScoreService>() with singleton {
-        LocalScoreService()
+        DatabaseScoreService(
+            database = instance("storage"),
+            wordsService = instance()
+        )
     }
     bind<SyncService>() with singleton {
         GrpcSyncService(instance<Client>() as HttpClient,
