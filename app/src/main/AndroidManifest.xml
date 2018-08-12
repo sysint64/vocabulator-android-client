@@ -23,9 +23,13 @@
 
         <activity android:name=".ui.WordListActivity" />
 
-        <activity android:name=".ui.WordDetailsActivity" />
+        <activity
+            android:name=".ui.WordDetailsActivity"
+            android:label="Word details" />
 
-        <activity android:name=".ui.TrainActivity" />
+        <activity
+            android:name=".ui.TrainActivity"
+            android:label="Train" />
 
         <activity
             android:name=".ui.AddWordActivity"

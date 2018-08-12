@@ -14,6 +14,7 @@ import org.kodein.di.generic.instance
 import org.kodein.di.generic.kcontext
 import ru.kabylin.andrey.vocabulator.R
 import ru.kabylin.andrey.vocabulator.client.Client
+import ru.kabylin.andrey.vocabulator.ext.hideView
 import ru.kabylin.andrey.vocabulator.getScoreColor
 import ru.kabylin.andrey.vocabulator.ui.holders.WordInListHolder
 import ru.kabylin.andrey.vocabulator.services.TrainService
@@ -48,6 +49,8 @@ class WordListActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware
         setContentView(R.layout.activity_word_list)
 
         categoryTitleTextView.text = intent.extras["categoryName"] as String
+        categoryTitleTextView.hideView()
+        title = intent.extras["categoryName"] as String
 
         toolbar.attachToActivity(this, displayHomeButton = true)
         errorsView.attach(container)
