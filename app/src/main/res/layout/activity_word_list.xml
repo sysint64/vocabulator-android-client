@@ -71,7 +71,7 @@
         android:paddingTop="4dp"
         app:layout_constraintBottom_toTopOf="@+id/translationWorldModeButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"></LinearLayout>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/wordTranslationModeButton"

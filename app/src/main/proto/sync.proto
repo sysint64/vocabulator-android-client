@@ -13,6 +13,7 @@ service Sync {
 
 message SyncGrpcRequest {
     repeated WordGrpcRequest words = 1;
+    repeated NewWordGrpcRequest newWords = 2;
 }
 
 message WordGrpcRequest {
@@ -20,29 +21,57 @@ message WordGrpcRequest {
     int32 scoreDelta = 2;
 }
 
-message SyncGrpcResponse {
-    repeated WordCategoryGrpcResponse categories = 1;
-    repeated WordGrpcResponse words = 2;
+message NewWordGrpcRequest {
+    string name = 1;
+    string translation = 2;
 }
 
-message WordCategoryGrpcResponse {
+message SyncGrpcResponse {
+    repeated LangaugeGrpcResponse languages = 1;
+    repeated WordCategoryGrpcResponse categories = 2;
+    repeated WordGrpcResponse words = 3;
+}
+
+message LangaugeGrpcResponse {
     int64 id = 1;
     string name = 2;
 }
 
+message WordCategoryGrpcResponse {
+    int64 id = 1;
+    int64 languageId = 2;
+    string name = 3;
+}
+
 message WordGrpcResponse {
     int64 id = 1;
-    int64 categoryId = 2;
-    string name = 3;
-    string translations = 4;
-    string pronounce = 5;
-    repeated DefinitionGrpcResponse definitions = 6;
-    int64 score = 7;
+    int64 langaugeId = 2;
+    int64 categoryId = 3;
+    string name = 4;
+    string translations = 5;
+    string pronounce = 6;
+    repeated DefinitionGrpcResponse definitions = 7;
+    int64 score = 8;
+    string association_image = 9;
+    repeated ExampleGrpcResponse examples = 10;
+    repeated KanjiGrpcResponse kanji = 11;
 }
 
 message DefinitionGrpcResponse {
     string title = 1;
     string desc = 2;
     string example = 3;
-    string synonyms = 4;
+    string translation = 4;
+    string synonyms = 5;
+}
+
+message ExampleGrpcResponse {
+    string content = 1;
+    string translation = 2;
+}
+
+message KanjiGrpcResponse {
+    string hieroglyph = 1;
+    string reading = 2;
+    string meaning = 3;
 }
