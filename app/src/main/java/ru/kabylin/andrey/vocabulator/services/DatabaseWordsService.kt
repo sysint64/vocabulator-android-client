@@ -15,7 +15,7 @@ class DatabaseWordsService(private val database: SyncDatabase) : WordsService {
             .map(::fromListWordDatabaseModelToListWordsServiceWord)
             .map {
                 it.sortedBy {
-                    if (it.score == 0) 10 else it.score
+                    if (it.score == 0) 11 else it.score
                 }
             }
 

@@ -27,7 +27,9 @@
 
         <activity android:name=".ui.TrainActivity" />
 
-        <activity android:name=".ui.AddWordActivity" />
+        <activity
+            android:name=".ui.AddWordActivity"
+            android:label="Add new word" />
     </application>
 
 </manifest>

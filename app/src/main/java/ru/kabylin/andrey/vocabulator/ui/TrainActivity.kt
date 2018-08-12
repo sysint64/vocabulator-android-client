@@ -2,6 +2,8 @@ package ru.kabylin.andrey.vocabulator.ui
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.ImageView
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -193,4 +195,18 @@ class TrainActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
             RequestState.FINISHED -> progressBar.hideView()
         }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.toolbar_menu_add_word, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) =
+        when (item.itemId) {
+            R.id.menu_add_word -> {
+                gotoScreen(WordsScreens.ADD_WORD)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
 }

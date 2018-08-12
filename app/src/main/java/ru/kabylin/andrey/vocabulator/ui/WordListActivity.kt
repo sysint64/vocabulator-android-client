@@ -2,6 +2,8 @@ package ru.kabylin.andrey.vocabulator.ui
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.activity_word_list.*
@@ -118,4 +120,18 @@ class WordListActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware
     private fun onWordClick(word: WordsService.Word) {
         gotoScreen(WordsScreens.DETAILS, mapOf("ref" to word.ref))
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.toolbar_menu_add_word, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) =
+        when (item.itemId) {
+            R.id.menu_add_word -> {
+                gotoScreen(WordsScreens.ADD_WORD)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
 }
