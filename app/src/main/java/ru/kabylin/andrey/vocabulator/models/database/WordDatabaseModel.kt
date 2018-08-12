@@ -13,6 +13,9 @@ data class WordDatabaseModel(
     @ColumnInfo(name = "category_ref")
     val categoryRef: String,
 
+    @ColumnInfo(name = "language_ref")
+    val languageRef: String,
+
     @ColumnInfo(name = "name")
     val name: String,
 
@@ -29,19 +32,40 @@ data class WordDatabaseModel(
     val score: Int,
 
     @ColumnInfo(name = "lastScore")
-    val lastScore: Int
+    val lastScore: Int,
+
+    @ColumnInfo(name = "association_image")
+    val associationImage: String,
+
+    @ColumnInfo(name = "examples")
+    val examples: List<ExampleDatabaseModel>,
+
+    @ColumnInfo(name = "kanji")
+    val kanji: List<KanjiDatabaseModel>
 )
 
 data class DefinitionDatabaseModel(
     val title: String,
     val desc: String,
     val example: String,
+    val translation: String,
     val synonyms: String
 )
 
 data class DetailsDatabaseModel(
     val title: String,
     val value: String
+)
+
+data class ExampleDatabaseModel(
+    val content: String,
+    val translation: String
+)
+
+data class KanjiDatabaseModel(
+    val hieroglyph: String,
+    val reading: String,
+    val meaning: String
 )
 
 class DetailsTypeConverter {
@@ -70,6 +94,36 @@ class DefinitionTypeConverter {
     @TypeConverter
     fun toModel(data: String): List<DefinitionDatabaseModel> {
         val type = object : TypeToken<ArrayList<DefinitionDatabaseModel>>() {}.type
+        return gson.fromJson(data, type)
+    }
+}
+
+class ExampleTypeConverter {
+    private val gson = Gson()
+
+    @TypeConverter
+    fun toString(details: List<ExampleDatabaseModel>): String {
+        return gson.toJson(details)
+    }
+
+    @TypeConverter
+    fun toModel(data: String): List<ExampleDatabaseModel> {
+        val type = object : TypeToken<ArrayList<ExampleDatabaseModel>>() {}.type
+        return gson.fromJson(data, type)
+    }
+}
+
+class KanjiTypeConverter {
+    private val gson = Gson()
+
+    @TypeConverter
+    fun toString(details: List<KanjiDatabaseModel>): String {
+        return gson.toJson(details)
+    }
+
+    @TypeConverter
+    fun toModel(data: String): List<KanjiDatabaseModel> {
+        val type = object : TypeToken<ArrayList<KanjiDatabaseModel>>() {}.type
         return gson.fromJson(data, type)
     }
 }

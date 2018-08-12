@@ -8,6 +8,9 @@ data class CategoryDatabaseModel(
     @ColumnInfo(name = "ref")
     val ref: String,
 
+    @ColumnInfo(name = "languageRef")
+    val languageRef: String,
+
     @ColumnInfo(name = "name")
     val name: String
 )

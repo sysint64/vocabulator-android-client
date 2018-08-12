@@ -9,13 +9,17 @@ import ru.kabylin.andrey.vocabulator.models.database.*
     version = 1,
     entities = [
         CategoryDatabaseModel::class,
-        WordDatabaseModel::class
+        WordDatabaseModel::class,
+        NewWordDatabaseModel::class,
+        LanguageDatabaseModel::class
     ]
 )
 @TypeConverters(
     value = [
         DetailsTypeConverter::class,
-        DefinitionTypeConverter::class
+        DefinitionTypeConverter::class,
+        ExampleTypeConverter::class,
+        KanjiTypeConverter::class
     ]
 )
 abstract class SyncDatabase : RoomDatabase() {
