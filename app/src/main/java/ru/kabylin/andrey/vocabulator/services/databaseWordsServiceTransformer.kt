@@ -1,8 +1,10 @@
 package ru.kabylin.andrey.vocabulator.services
 
-import ru.kabylin.andrey.vocabulator.models.TitleValue
 import ru.kabylin.andrey.vocabulator.models.database.CategoryDatabaseModel
 import ru.kabylin.andrey.vocabulator.models.database.WordDatabaseModel
+import ru.kabylin.andrey.vocabulator.ui.models.Kanji
+import ru.kabylin.andrey.vocabulator.ui.models.WordDetailsDefinition
+import ru.kabylin.andrey.vocabulator.ui.models.WordDetailsItemVariant
 
 fun fromListCategoryDatabaseModelToListWordsServiceCategory(list: List<CategoryDatabaseModel>): List<WordsService.Category> =
     list.map(::fromCategoryDatabaseModelToWordsServiceCategory)
@@ -33,23 +35,52 @@ fun fromWordDatabaseModelToWordsServiceWord(model: WordDatabaseModel): WordsServ
     )
 }
 
-fun fromWordDatabaseModelToWordsServiceWordDetails(model: WordDatabaseModel): WordsService.WordDetails =
-    WordsService.WordDetails(
+fun fromWordDatabaseModelToWordsServiceWordDetails(model: WordDatabaseModel): WordsService.WordDetails {
+    val details = ArrayList<WordDetailsItemVariant>()
+
+    for (detailItem in model.details) {
+        details.add(WordDetailsItemVariant(title = detailItem.title))
+        details.add(WordDetailsItemVariant(desc = detailItem.value))
+    }
+
+    val translations = model.translations.split(";").map { it.trim() }.filter { it.isNotBlank() }
+
+    if (translations.isNotEmpty())
+        details.add(WordDetailsItemVariant(title = "Translations"))
+
+    for (translation in translations)
+        details.add(WordDetailsItemVariant(listItem = translation))
+
+    for (definition in model.definitions)
+        details.add(
+            WordDetailsItemVariant(
+                definition = WordDetailsDefinition(
+                    title = definition.title,
+                    desc = definition.desc,
+                    example = definition.example,
+                    synonyms = definition.synonyms.split(",").map { it.trim() }.filter { it.isNotBlank() }
+                )
+            )
+        )
+
+    if (model.kanji.isNotEmpty())
+        details.add(WordDetailsItemVariant(title = "Kanji"))
+
+    for (kanji in model.kanji.reversed()) {
+        details.add(
+            WordDetailsItemVariant(
+                kanji = Kanji(
+                    hieroglyph = kanji.hieroglyph,
+                    reading = kanji.reading,
+                    meaning = kanji.meaning
+                )
+            )
+        )
+    }
+
+    return WordsService.WordDetails(
         ref = model.ref,
         name = model.name,
-        translations = model.translations.split(",").map { it.trim() }.filter { it.isNotBlank() },
-        details = model.details.map {
-            TitleValue(
-                title = it.title,
-                value = it.value
-            )
-        },
-        definitions = model.definitions.map {
-            WordsService.Definition(
-                title = it.title,
-                desc = it.desc,
-                example = it.example,
-                synonyms = it.synonyms.split(",").map { it.trim() }.filter { it.isNotBlank() }
-            )
-        }
+        details = details
     )
+}

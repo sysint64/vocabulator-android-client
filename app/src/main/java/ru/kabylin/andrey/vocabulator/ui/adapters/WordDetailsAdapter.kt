@@ -1,11 +1,10 @@
-package ru.kabylin.andrey.vocabulator
+package ru.kabylin.andrey.vocabulator.ui.adapters
 
 import android.content.Context
 import android.view.View
-import ru.kabylin.andrey.vocabulator.holders.WordDetailsDefinitionHolder
-import ru.kabylin.andrey.vocabulator.holders.WordDetailsDescHolder
-import ru.kabylin.andrey.vocabulator.holders.WordDetailsListTextHolder
-import ru.kabylin.andrey.vocabulator.holders.WordDetailsTitleHolder
+import ru.kabylin.andrey.vocabulator.R
+import ru.kabylin.andrey.vocabulator.ui.holders.*
+import ru.kabylin.andrey.vocabulator.ui.models.WordDetailsItemVariant
 import ru.kabylin.andrey.vocabulator.views.DummyRecyclerItemHolder
 import ru.kabylin.andrey.vocabulator.views.ItemRecyclerAdapter
 import ru.kabylin.andrey.vocabulator.views.RecyclerItemHolder
@@ -21,6 +20,7 @@ open class WordDetailsAdapter(
         const val VIEW_TYPE_LIST_TEXT_ITEM = 2
         const val VIEW_TYPE_DEFINITION = 3
         const val VIEW_TYPE_DESC = 4
+        const val VIEW_TYPE_KANJI = 5
     }
 
     override fun obtainLayout(viewType: Int): Int =
@@ -30,6 +30,7 @@ open class WordDetailsAdapter(
             VIEW_TYPE_LIST_TEXT_ITEM -> R.layout.item_list_text_item
             VIEW_TYPE_DEFINITION -> R.layout.item_definition
             VIEW_TYPE_DESC -> R.layout.item_single_desc
+            VIEW_TYPE_KANJI -> R.layout.item_kanji
             else -> throw AssertionError("Unspecified view type")
         }
 
@@ -40,6 +41,7 @@ open class WordDetailsAdapter(
             VIEW_TYPE_LIST_TEXT_ITEM -> WordDetailsListTextHolder(context, view)
             VIEW_TYPE_DEFINITION -> WordDetailsDefinitionHolder(context, view)
             VIEW_TYPE_DESC -> WordDetailsDescHolder(context, view)
+            VIEW_TYPE_KANJI -> WordDetailsKanjiHolder(context, view)
             else -> throw AssertionError("Unspecified view type")
         }
 
@@ -52,6 +54,7 @@ open class WordDetailsAdapter(
             item.listItem != null -> VIEW_TYPE_LIST_TEXT_ITEM
             item.definition != null -> VIEW_TYPE_DEFINITION
             item.desc != null -> VIEW_TYPE_DESC
+            item.kanji != null -> VIEW_TYPE_KANJI
             else -> throw AssertionError("Unspecified view type")
         }
     }

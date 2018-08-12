@@ -1,10 +1,10 @@
-package ru.kabylin.andrey.vocabulator.holders
+package ru.kabylin.andrey.vocabulator.ui.holders
 
 import android.content.Context
 import android.view.View
 import kotlinx.android.synthetic.main.item_definition.view.*
 import ru.kabylin.andrey.vocabulator.R
-import ru.kabylin.andrey.vocabulator.WordDetailsItemVariant
+import ru.kabylin.andrey.vocabulator.ui.models.WordDetailsItemVariant
 import ru.kabylin.andrey.vocabulator.ext.hideView
 import ru.kabylin.andrey.vocabulator.ext.showView
 import ru.kabylin.andrey.vocabulator.views.RecyclerItemHolder

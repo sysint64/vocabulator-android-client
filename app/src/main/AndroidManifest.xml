@@ -13,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,11 +21,13 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".WordListActivity" />
+        <activity android:name=".ui.WordListActivity" />
 
-        <activity android:name=".WordDetailsActivity" />
+        <activity android:name=".ui.WordDetailsActivity" />
 
-        <activity android:name=".TrainActivity" />
+        <activity android:name=".ui.TrainActivity" />
+
+        <activity android:name=".ui.AddWordActivity" />
     </application>
 
 </manifest>

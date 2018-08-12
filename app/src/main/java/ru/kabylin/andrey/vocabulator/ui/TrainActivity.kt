@@ -1,4 +1,4 @@
-package ru.kabylin.andrey.vocabulator
+package ru.kabylin.andrey.vocabulator.ui
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -21,7 +21,10 @@ import ru.kabylin.andrey.vocabulator.services.WordsService
 import ru.kabylin.andrey.vocabulator.views.*
 import java.util.concurrent.TimeUnit
 import android.view.animation.AnimationUtils
+import ru.kabylin.andrey.vocabulator.R
 import ru.kabylin.andrey.vocabulator.ext.disposeBy
+import ru.kabylin.andrey.vocabulator.ui.adapters.WordDetailsAdapter
+import ru.kabylin.andrey.vocabulator.ui.models.WordDetailsItemVariant
 import ru.kabylin.andrey.vocabulator.views.anim.BounceInterpolator
 
 class TrainActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
@@ -162,30 +165,9 @@ class TrainActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
 
     private fun updateDetails(details: WordsService.WordDetails) {
         items.clear()
-
-        for (item in details.details) {
-            items.add(WordDetailsItemVariant(title = item.title))
-            items.add(WordDetailsItemVariant(desc = item.value))
-        }
-
-        if (details.translations.isNotEmpty())
-            items.add(WordDetailsItemVariant(title = "Translations"))
-
-        for (translation in details.translations)
-            items.add(WordDetailsItemVariant(listItem = translation))
-
-        for (definition in details.definitions)
-            items.add(WordDetailsItemVariant(definition = definition))
-
+        items.addAll(details.details)
         recyclerAdapter.notifyDataSetChanged()
-
-        // Android 5 bug :(
-        Single.just(Unit)
-            .subscribeOn(AndroidSchedulers.mainThread())
-            .delaySubscription(500, TimeUnit.MILLISECONDS)
-            .subscribeOnSuccess {
-                recyclerView.scrollToPosition(0)
-            }
+        recyclerView.scrollToPosition(0)
     }
 
     private fun updateState() {

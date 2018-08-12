@@ -1,4 +1,4 @@
-package ru.kabylin.andrey.vocabulator
+package ru.kabylin.andrey.vocabulator.ui
 
 import android.content.Context
 import ru.kabylin.andrey.vocabulator.router.Router
@@ -9,13 +9,15 @@ enum class WordsScreens : ScreenTransitionEnum {
     LIST,
     DETAILS,
     TRAIN,
+    ADD_WORD
     ;
 }
 
 class WordsRouter(context: Context) : Router(context) {
     override fun transitionUpdate(screenTransition: ScreenTransition<*>?) {
         super.transitionUpdate(screenTransition)
-        val transition = screenTransition?.transition as? WordsScreens ?: return
+        val transition = screenTransition?.transition as? WordsScreens
+            ?: return
 
         when (transition) {
             WordsScreens.LIST ->
@@ -34,6 +36,12 @@ class WordsRouter(context: Context) : Router(context) {
                 screenTransition.startActivity(
                     context,
                     TrainActivity::class.java
+                )
+
+            WordsScreens.ADD_WORD ->
+                screenTransition.startActivity(
+                    context,
+                    AddWordActivity::class.java
                 )
         }
     }

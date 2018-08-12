@@ -14,4 +14,3 @@ data class LanguageDatabaseModel(
     @ColumnInfo(name = "name")
     val name: String
 )
-

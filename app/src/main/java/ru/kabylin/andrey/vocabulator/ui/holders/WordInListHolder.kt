@@ -1,7 +1,6 @@
-package ru.kabylin.andrey.vocabulator.holders
+package ru.kabylin.andrey.vocabulator.ui.holders
 
 import android.content.Context
-import android.graphics.Color
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.view.View
 import kotlinx.android.synthetic.main.item_word.view.*

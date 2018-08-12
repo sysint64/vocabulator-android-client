@@ -1,4 +1,4 @@
-package ru.kabylin.andrey.vocabulator
+package ru.kabylin.andrey.vocabulator.ui
 
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
@@ -14,8 +14,10 @@ import ru.kabylin.andrey.vocabulator.client.RequestState
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.Menu
 import android.view.MenuItem
+import ru.kabylin.andrey.vocabulator.R
+import ru.kabylin.andrey.vocabulator.Settings
 import ru.kabylin.andrey.vocabulator.ext.*
-import ru.kabylin.andrey.vocabulator.holders.CategoryCardHolder
+import ru.kabylin.andrey.vocabulator.ui.holders.CategoryCardHolder
 import ru.kabylin.andrey.vocabulator.services.SyncService
 import ru.kabylin.andrey.vocabulator.tools.isNetworkAvailable
 import ru.kabylin.andrey.vocabulator.views.*
@@ -107,6 +109,10 @@ class MainActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
         when (item.itemId) {
             R.id.menu_sync -> {
                 sync()
+                true
+            }
+            R.id.menu_add_word -> {
+                gotoScreen(WordsScreens.ADD_WORD)
                 true
             }
             else -> super.onOptionsItemSelected(item)

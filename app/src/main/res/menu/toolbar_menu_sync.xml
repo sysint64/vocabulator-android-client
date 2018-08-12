@@ -8,4 +8,11 @@
         android:title="Sync"
         app:iconTint="#fff"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_add_word"
+        android:icon="@drawable/ic_plus"
+        android:title="Add word"
+        app:iconTint="#fff"
+        app:showAsAction="always" />
 </menu>

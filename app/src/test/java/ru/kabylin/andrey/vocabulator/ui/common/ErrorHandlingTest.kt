@@ -6,10 +6,10 @@ import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import ru.kabylin.andrey.vocabulator.MainActivity
-import ru.kabylin.andrey.vocabulator.TrainActivity
-import ru.kabylin.andrey.vocabulator.WordDetailsActivity
-import ru.kabylin.andrey.vocabulator.WordListActivity
+import ru.kabylin.andrey.vocabulator.ui.MainActivity
+import ru.kabylin.andrey.vocabulator.ui.TrainActivity
+import ru.kabylin.andrey.vocabulator.ui.WordDetailsActivity
+import ru.kabylin.andrey.vocabulator.ui.WordListActivity
 import ru.kabylin.andrey.vocabulator.ext.createBundle
 import ru.kabylin.andrey.vocabulator.ui.BaseUiTest
 import ru.kabylin.andrey.vocabulator.ui.UiTestApplication

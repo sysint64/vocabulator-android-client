@@ -14,9 +14,10 @@ interface DatabaseModelDao {
     fun insertAllWords(words: List<WordDatabaseModel>)
 
     @Transaction
-    fun insertAll(data: SyncDatabaseModel) {
+    fun sync(data: SyncDatabaseModel) {
         insertAllCategories(data.categories)
         insertAllWords(data.words)
+        clearNewWords()
     }
 
     @Query("SELECT * FROM words WHERE category_ref = :categoryRef")
@@ -33,4 +34,13 @@ interface DatabaseModelDao {
 
     @Query("UPDATE words SET score = :newScore  WHERE ref = :ref")
     fun updateWordScore(ref: String, newScore: Int): Int
+
+    @Query("SELECT * FROM new_words")
+    fun getAllNewWords(): List<NewWordDatabaseModel>
+
+    @Query("DELETE FROM new_words")
+    fun clearNewWords(): Int
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertNewWord(data: NewWordDatabaseModel)
 }

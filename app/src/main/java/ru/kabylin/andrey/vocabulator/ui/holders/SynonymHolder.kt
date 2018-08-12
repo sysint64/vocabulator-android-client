@@ -1,4 +1,4 @@
-package ru.kabylin.andrey.vocabulator.holders
+package ru.kabylin.andrey.vocabulator.ui.holders
 
 import android.content.Context
 import android.view.View

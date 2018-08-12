@@ -1,4 +1,4 @@
-package ru.kabylin.andrey.vocabulator
+package ru.kabylin.andrey.vocabulator.ui
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -10,8 +10,10 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.closestKodein
 import org.kodein.di.generic.instance
 import org.kodein.di.generic.kcontext
+import ru.kabylin.andrey.vocabulator.R
 import ru.kabylin.andrey.vocabulator.client.Client
-import ru.kabylin.andrey.vocabulator.holders.WordInListHolder
+import ru.kabylin.andrey.vocabulator.getScoreColor
+import ru.kabylin.andrey.vocabulator.ui.holders.WordInListHolder
 import ru.kabylin.andrey.vocabulator.services.TrainService
 import ru.kabylin.andrey.vocabulator.services.WordsService
 import ru.kabylin.andrey.vocabulator.views.*

@@ -1,5 +1,6 @@
 package ru.kabylin.andrey.vocabulator.services
 
+import io.reactivex.Completable
 import io.reactivex.Single
 import ru.kabylin.andrey.vocabulator.models.TitleValue
 
@@ -66,44 +67,48 @@ class LocalWordsService : WordsService {
             }
 
     override fun getWordDetails(ref: String): Single<WordsService.WordDetails> =
-        Single.just(
-            WordsService.WordDetails(
-                ref = ref,
-                name = words.first { it.second.ref == ref }.second.name,
-                details = listOf(
-                    TitleValue(
-                        title = "Pronounce",
-                        value = "ˈbrākˌTHro͞o"
-                    )
-                ),
-                translations = listOf(
-                    "прорвать",
-                    "прорыв",
-                    "достижение"
-                ),
-                definitions = listOf(
-                    WordsService.Definition(
-                        title = "noun",
-                        desc = "a sudden, dramatic, and important discovery or development.",
-                        example = "a major breakthrough in DNA research",
-                        synonyms = "advance, development, step forward, success, improvement, discovery, innovation, revolution, progress, headway".split(",")
-                    ),
-                    WordsService.Definition(
-                        title = "noun",
-                        desc = "a sudden, dramatic, and important discovery or development.",
-                        example = "",
-                        synonyms = "advance, development".split(",")
-                    ),
-                    WordsService.Definition(
-                        title = "noun",
-                        desc = "a sudden, dramatic, and important discovery or development.",
-                        example = "a major breakthrough in DNA research",
-                        synonyms = listOf()
-                    )
-                )
-            )
-        )
+        TODO()
+//        Single.just(
+//            WordsService.WordDetails(
+//                ref = ref,
+//                name = words.first { it.second.ref == ref }.second.name,
+//                details = listOf(
+//                    TitleValue(
+//                        title = "Pronounce",
+//                        value = "ˈbrākˌTHro͞o"
+//                    )
+//                ),
+//                translations = listOf(
+//                    "прорвать",
+//                    "прорыв",
+//                    "достижение"
+//                ),
+//                definitions = listOf(
+//                    WordsService.WordDetailsDefinition(
+//                        title = "noun",
+//                        desc = "a sudden, dramatic, and important discovery or development.",
+//                        example = "a major breakthrough in DNA research",
+//                        synonyms = "advance, development, step forward, success, improvement, discovery, innovation, revolution, progress, headway".split(",")
+//                    ),
+//                    WordsService.WordDetailsDefinition(
+//                        title = "noun",
+//                        desc = "a sudden, dramatic, and important discovery or development.",
+//                        example = "",
+//                        synonyms = "advance, development".split(",")
+//                    ),
+//                    WordsService.WordDetailsDefinition(
+//                        title = "noun",
+//                        desc = "a sudden, dramatic, and important discovery or development.",
+//                        example = "a major breakthrough in DNA research",
+//                        synonyms = listOf()
+//                    )
+//                )
+//            )
+//        )
 
     override fun getScoreForWord(wordRef: String): Single<Int> =
         Single.just(0)
+
+    override fun addNewWord(newWord: WordsService.NewWord): Completable =
+        Completable.complete()
 }
