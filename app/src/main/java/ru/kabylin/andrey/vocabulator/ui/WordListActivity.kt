@@ -21,13 +21,13 @@ import ru.kabylin.andrey.vocabulator.services.TrainService
 import ru.kabylin.andrey.vocabulator.services.WordsService
 import ru.kabylin.andrey.vocabulator.views.*
 
-class WordListActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
+class WordListActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAware {
     override val kodeinContext = kcontext(this)
     override val kodein by closestKodein()
 
     override val router = WordsRouter(this)
     override val client: Client by instance()
-    override val viewState by lazy { ClientViewState(client, this, lifecycle) }
+    override val viewMediator by lazy { ClientViewMediator(client, this, lifecycle) }
 
     private val wordsService: WordsService by instance()
     private val trainService: TrainService by instance()

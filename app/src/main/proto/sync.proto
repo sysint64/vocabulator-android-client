@@ -3,7 +3,6 @@ syntax = "proto3";
 option java_multiple_files = true;
 option java_package = "ru.kabylin.andrey.grpc.sync";
 option java_outer_classname = "SyncProto";
-option objc_class_prefix = "SP";
 
 package sync;
 

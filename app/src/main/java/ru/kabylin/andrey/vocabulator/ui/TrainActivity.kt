@@ -5,8 +5,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_word_details.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.closestKodein
@@ -17,11 +15,9 @@ import ru.kabylin.andrey.vocabulator.client.ClientResponse
 import ru.kabylin.andrey.vocabulator.client.RequestState
 import ru.kabylin.andrey.vocabulator.ext.hideView
 import ru.kabylin.andrey.vocabulator.ext.showView
-import ru.kabylin.andrey.vocabulator.ext.subscribeOnSuccess
 import ru.kabylin.andrey.vocabulator.services.TrainService
 import ru.kabylin.andrey.vocabulator.services.WordsService
 import ru.kabylin.andrey.vocabulator.views.*
-import java.util.concurrent.TimeUnit
 import android.view.animation.AnimationUtils
 import ru.kabylin.andrey.vocabulator.R
 import ru.kabylin.andrey.vocabulator.ext.disposeBy
@@ -29,13 +25,13 @@ import ru.kabylin.andrey.vocabulator.ui.adapters.WordDetailsAdapter
 import ru.kabylin.andrey.vocabulator.ui.models.WordDetailsItemVariant
 import ru.kabylin.andrey.vocabulator.views.anim.BounceInterpolator
 
-class TrainActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
+class TrainActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAware {
     override val kodeinContext = kcontext(this)
     override val kodein by closestKodein()
 
     override val router = WordsRouter(this)
     override val client: Client by instance()
-    override val viewState by lazy { ClientViewState(client, this, lifecycle) }
+    override val viewMediator by lazy { ClientViewMediator(client, this, lifecycle) }
 
     private val trainService: TrainService by instance()
 

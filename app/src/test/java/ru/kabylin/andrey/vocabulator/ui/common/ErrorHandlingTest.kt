@@ -14,7 +14,7 @@ import ru.kabylin.andrey.vocabulator.ext.createBundle
 import ru.kabylin.andrey.vocabulator.ui.BaseUiTest
 import ru.kabylin.andrey.vocabulator.ui.UiTestApplication
 import ru.kabylin.andrey.vocabulator.views.ClientAppCompatActivity
-import ru.kabylin.andrey.vocabulator.views.ClientViewState
+import ru.kabylin.andrey.vocabulator.views.ClientViewMediator
 
 /**
  * Тест проверяет, что обработка ошибок на конкретных экранах соответствует ожиданиям.
@@ -29,9 +29,9 @@ class ErrorHandlingTest : BaseUiTest() {
      *  реальность ожиданиям.
      */
     private fun doTest(
-        cls: Class<out ClientAppCompatActivity<ClientViewState>>,
-        extras: Map<String, Any>? = null,
-        errorResponder: ErrorResponder = DefaultErrorsResponder()
+            cls: Class<out ClientAppCompatActivity<ClientViewMediator>>,
+            extras: Map<String, Any>? = null,
+            errorResponder: ErrorResponder = DefaultErrorsResponder()
     ) {
         val intent = Intent(application.applicationContext, cls)
 
@@ -43,8 +43,8 @@ class ErrorHandlingTest : BaseUiTest() {
     }
 
     private fun checkErrors(
-        activity: ClientAppCompatActivity<ClientViewState>,
-        errorResponder: ErrorResponder = DefaultErrorsResponder()
+            activity: ClientAppCompatActivity<ClientViewMediator>,
+            errorResponder: ErrorResponder = DefaultErrorsResponder()
     ) {
         // Views
         errorResponder.onVersionWarning(activity)

@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_word_details.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.closestKodein
@@ -17,20 +15,18 @@ import ru.kabylin.andrey.vocabulator.client.ClientResponse
 import ru.kabylin.andrey.vocabulator.client.RequestState
 import ru.kabylin.andrey.vocabulator.ext.hideView
 import ru.kabylin.andrey.vocabulator.ext.showView
-import ru.kabylin.andrey.vocabulator.ext.subscribeOnSuccess
 import ru.kabylin.andrey.vocabulator.services.WordsService
 import ru.kabylin.andrey.vocabulator.ui.adapters.WordDetailsAdapter
 import ru.kabylin.andrey.vocabulator.ui.models.WordDetailsItemVariant
 import ru.kabylin.andrey.vocabulator.views.*
-import java.util.concurrent.TimeUnit
 
-class WordDetailsActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
+class WordDetailsActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAware {
     override val kodeinContext = kcontext(this)
     override val kodein by closestKodein()
 
     override val router = WordsRouter(this)
     override val client: Client by instance()
-    override val viewState by lazy { ClientViewState(client, this, lifecycle) }
+    override val viewMediator by lazy { ClientViewMediator(client, this, lifecycle) }
 
     private val wordsService: WordsService by instance()
     private val items = ArrayList<WordDetailsItemVariant>()

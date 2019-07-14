@@ -2,7 +2,6 @@ package ru.kabylin.andrey.vocabulator.views
 
 import android.arch.lifecycle.Lifecycle
 import android.os.Bundle
-import io.reactivex.disposables.CompositeDisposable
 import ru.kabylin.andrey.vocabulator.client.*
 import ru.kabylin.andrey.vocabulator.ext.disposeBy
 
@@ -14,8 +13,8 @@ interface ClientCallbacks : ErrorsListener, RequestStateListener {
     fun onSessionError(error: SessionError?)
 }
 
-open class ClientViewState(val client: Client, aware: ViewStateAware, lifecycle: Lifecycle)
-    : ViewState(aware, lifecycle), ErrorsListener
+open class ClientViewMediator(val client: Client, aware: ViewMediatorAware, lifecycle: Lifecycle)
+    : ViewMediator(aware, lifecycle), ErrorsListener
 {
     var error: Throwable? = null
 

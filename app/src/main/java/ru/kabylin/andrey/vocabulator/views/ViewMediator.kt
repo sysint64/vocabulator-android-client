@@ -67,7 +67,7 @@ data class ScreenTransition<out T : ScreenTransitionEnum>(
     }
 }
 
-open class ViewState(protected val aware: ViewStateAware, private val lifecycle: Lifecycle) : LifecycleObserver {
+open class ViewMediator(protected val aware: ViewMediatorAware, private val lifecycle: Lifecycle) : LifecycleObserver {
 
     var lifecycleDisposer = CompositeDisposable()
     var screenTransition: ScreenTransition<*>? = null

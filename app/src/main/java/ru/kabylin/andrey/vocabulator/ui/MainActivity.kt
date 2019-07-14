@@ -23,13 +23,13 @@ import ru.kabylin.andrey.vocabulator.tools.isNetworkAvailable
 import ru.kabylin.andrey.vocabulator.views.*
 import java.util.*
 
-class MainActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
+class MainActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAware {
     override val kodeinContext = kcontext(this)
     override val kodein by closestKodein()
 
     override val router = WordsRouter(this)
     override val client: Client by instance()
-    override val viewState by lazy { ClientViewState(client, this, lifecycle) }
+    override val viewMediator by lazy { ClientViewMediator(client, this, lifecycle) }
 
     private val wordsService: WordsService by instance()
     private val syncService: SyncService by instance()

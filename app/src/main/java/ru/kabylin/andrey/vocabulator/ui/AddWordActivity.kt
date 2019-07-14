@@ -10,16 +10,16 @@ import ru.kabylin.andrey.vocabulator.R
 import ru.kabylin.andrey.vocabulator.client.Client
 import ru.kabylin.andrey.vocabulator.services.WordsService
 import ru.kabylin.andrey.vocabulator.views.ClientAppCompatActivity
-import ru.kabylin.andrey.vocabulator.views.ClientViewState
+import ru.kabylin.andrey.vocabulator.views.ClientViewMediator
 import ru.kabylin.andrey.vocabulator.views.attachToActivity
 
-class AddWordActivity : ClientAppCompatActivity<ClientViewState>(), KodeinAware {
+class AddWordActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAware {
     override val kodeinContext = kcontext(this)
     override val kodein by closestKodein()
 
     override val router = WordsRouter(this)
     override val client: Client by instance()
-    override val viewState by lazy { ClientViewState(client, this, lifecycle) }
+    override val viewMediator by lazy { ClientViewMediator(client, this, lifecycle) }
 
     private val wordsService: WordsService by instance()
 

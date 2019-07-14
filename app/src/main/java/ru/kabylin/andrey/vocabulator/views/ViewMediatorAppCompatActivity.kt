@@ -5,15 +5,15 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import io.reactivex.disposables.CompositeDisposable
 
-abstract class ViewStateAppCompatActivity<out T : ViewState> : AppCompatActivity(), ViewStateAware {
-    abstract override val viewState: T
+abstract class ViewMediatorAppCompatActivity<out T : ViewMediator> : AppCompatActivity(), ViewMediatorAware {
+    abstract override val viewMediator: T
 
     val lifecycleDisposer: CompositeDisposable
-        get() = viewState.lifecycleDisposer
+        get() = viewMediator.lifecycleDisposer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewState.enable()
+        viewMediator.enable()
     }
 
     override fun onPostResume() {

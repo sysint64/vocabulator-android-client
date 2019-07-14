@@ -38,10 +38,10 @@ android {
         Properties properties = new Properties()
         properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
-        def apiEndpoint = properties.getOrDefault('api.endpoint', '"http://10.0.3.2:12345/api/"')
+        def apiEndpoint = properties.getOrDefault('api.endpoint', '"http://192.168.0.103:8080/api/"')
         buildConfigField("String", "API_ENDPOINT", apiEndpoint)
 
-        def grpcEndpoint = properties.getOrDefault('grpc.endpoint', '"10.0.3.2"')
+        def grpcEndpoint = properties.getOrDefault('grpc.endpoint', '"192.168.0.103"')
         def grpcPort = properties.getOrDefault('grpc.port', '50051')
 
         buildConfigField("String", "GRPC_ENDPOINT", grpcEndpoint)
@@ -77,7 +77,6 @@ def support_lib_version = "27.1.1"
 def retrofit_version = "2.3.0"
 def anko_version = "0.10.3"
 def lifecycle_version = "1.1.1"
-def nav_version = "1.0.0-alpha04"
 def room_version = "1.1.1"
 def grpc_version = "1.14.0"
 
@@ -134,8 +133,6 @@ dependencies {
     // Architecture Components
     implementation "android.arch.lifecycle:runtime:$lifecycle_version"
     kapt "android.arch.lifecycle:compiler:$lifecycle_version"
-    implementation "android.arch.navigation:navigation-fragment-ktx:$nav_version"
-    implementation "android.arch.navigation:navigation-ui-ktx:$nav_version"
 
     implementation "android.arch.persistence.room:runtime:$room_version"
     implementation "android.arch.persistence.room:rxjava2:$room_version"

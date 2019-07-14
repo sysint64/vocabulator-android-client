@@ -2,13 +2,13 @@ package ru.kabylin.andrey.vocabulator.views
 
 import ru.kabylin.andrey.vocabulator.client.*
 
-abstract class ClientAppCompatActivity<out T : ClientViewState> : ViewStateAppCompatActivity<T>(),
+abstract class ClientAppCompatActivity<out T : ClientViewMediator> : ViewMediatorAppCompatActivity<T>(),
     ClientAware, ErrorViewAware, ClientCallbacks, RequestStateListener
 {
     val errorsView by lazy { DefaultErrorsView(this) }
 
     override fun onRetryClick() {
-        viewState.clearErrors()
+        viewMediator.clearErrors()
         client.retryLastRequest()
     }
 
@@ -25,7 +25,7 @@ abstract class ClientAppCompatActivity<out T : ClientViewState> : ViewStateAppCo
     }
 
     override fun onErrorViewDismissErrorClick(error: ClientResponse<Throwable?>) {
-        viewState.clearErrors()
+        viewMediator.clearErrors()
     }
 
     override fun onSessionError(error: SessionError?) {
