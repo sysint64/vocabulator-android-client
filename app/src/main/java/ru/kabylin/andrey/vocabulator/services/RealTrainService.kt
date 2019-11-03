@@ -29,8 +29,15 @@ class RealTrainService(
     private val finishEvents = PublishSubject.create<Boolean>()
     private var currentWordIndexRelativePage = 0
 
+    private fun getDisplayTitle(): WordsService.Title =
+        if (mode == TrainService.Mode.TRANSLATION_WORD) {
+            WordsService.Title.TRANSLATION_OR_DEFINITION
+        } else {
+            WordsService.Title.WORD
+        }
+
     private fun getWords(categoryRef: String): Single<List<TrainService.Word>> =
-        wordsService.getTrainWordsForCategory(categoryRef)
+        wordsService.getTrainWordsForCategory(categoryRef, getDisplayTitle())
             .map {
                 it.map {
                     TrainService.Word(
@@ -40,21 +47,25 @@ class RealTrainService(
                 }
             }
 
-    override fun startWordTranslation(categoryRef: String): Completable =
-        getWords(categoryRef)
-            .map {
-                init(it)
-                mode = TrainService.Mode.WORD_TRANSLATION
-            }
-            .toCompletable()
+    override fun startWordTranslation(categoryRef: String): Completable {
+        mode = TrainService.Mode.WORD_TRANSLATION
 
-    override fun startTranslationWord(categoryRef: String): Completable =
-        getWords(categoryRef)
+        return getWords(categoryRef)
             .map {
                 init(it)
-                mode = TrainService.Mode.TRANSLATION_WORD
             }
             .toCompletable()
+    }
+
+    override fun startTranslationWord(categoryRef: String): Completable {
+        mode = TrainService.Mode.TRANSLATION_WORD
+
+        return getWords(categoryRef)
+            .map {
+                init(it)
+            }
+            .toCompletable()
+    }
 
     private fun init(words: List<TrainService.Word>) {
         wordsToLearn.clear()
@@ -153,7 +164,10 @@ class RealTrainService(
 
     override fun reveal(): Single<WordsService.WordDetails> =
         currentWord().flatMap {
-            wordsService.getWordDetails(it.ref)
+            wordsService.getWordDetails(
+                it.ref,
+                addWordTitle = getDisplayTitle() == WordsService.Title.TRANSLATION_OR_DEFINITION
+            )
         }
 
     override fun newPageEvents(): Subject<Boolean> = newPageEventsSubject

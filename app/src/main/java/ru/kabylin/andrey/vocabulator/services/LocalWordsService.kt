@@ -52,7 +52,7 @@ class LocalWordsService : WordsService {
                 .map { it.second }
         )
 
-    override fun getTrainWordsForCategory(categoryRef: String): Single<List<WordsService.Word>> =
+    override fun getTrainWordsForCategory(categoryRef: String, title: WordsService.Title): Single<List<WordsService.Word>> =
         getWordsForCategory(categoryRef)
 
     override fun getScoresCounts(categoryRef: String): Single<List<WordsService.CategoryScore>> =
@@ -66,7 +66,7 @@ class LocalWordsService : WordsService {
                 }
             }
 
-    override fun getWordDetails(ref: String): Single<WordsService.WordDetails> =
+    override fun getWordDetails(ref: String, addWordTitle: Boolean): Single<WordsService.WordDetails> =
         TODO()
 //        Single.just(
 //            WordsService.WordDetails(

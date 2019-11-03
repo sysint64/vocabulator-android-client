@@ -62,7 +62,7 @@ class WordDetailsActivity : ClientAppCompatActivity<ClientViewMediator>(), Kodei
     }
 
     private fun getDetails() {
-        val query = wordsService.getWordDetails(ref)
+        val query = wordsService.getWordDetails(ref, addWordTitle = false)
 
         wordTextView.text = ""
         items.clear()

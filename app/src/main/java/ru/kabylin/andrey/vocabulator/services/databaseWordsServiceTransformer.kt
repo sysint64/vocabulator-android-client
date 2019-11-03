@@ -16,8 +16,8 @@ fun fromCategoryDatabaseModelToWordsServiceCategory(model: CategoryDatabaseModel
         image = null
     )
 
-fun fromListWordDatabaseModelToListWordsServiceWord(list: List<WordDatabaseModel>): List<WordsService.Word> =
-    list.map(::fromWordDatabaseModelToWordsServiceWord)
+fun fromListWordDatabaseModelToListWordsServiceWord(list: List<WordDatabaseModel>, title: WordsService.Title): List<WordsService.Word> =
+    list.map { fromWordDatabaseModelToWordsServiceWord(it, title) }
 
 fun getNormalizedScore(score: Int) =
     if (score == 0) {
@@ -27,23 +27,40 @@ fun getNormalizedScore(score: Int) =
         minOf(maxOf(score / 10, 1), 10)
     }
 
-fun fromWordDatabaseModelToWordsServiceWord(model: WordDatabaseModel): WordsService.Word {
+fun fromWordDatabaseModelToWordsServiceWord(model: WordDatabaseModel, title: WordsService.Title): WordsService.Word {
+    val name = when (title) {
+        WordsService.Title.WORD -> model.name
+        WordsService.Title.TRANSLATION -> model.translations
+        WordsService.Title.TRANSLATION_OR_DEFINITION -> if (model.translations.trim() == "-") {
+            model.definitions.firstOrNull()?.desc ?: "?"
+        } else {
+            model.translations
+        }
+    }
+
     return WordsService.Word(
         ref = model.ref,
-        name = model.name,
+        name = name,
         score = getNormalizedScore(model.score)
     )
 }
 
-fun fromWordDatabaseModelToWordsServiceWordDetails(model: WordDatabaseModel): WordsService.WordDetails {
+fun fromWordDatabaseModelToWordsServiceWordDetails(model: WordDatabaseModel, addWordTitle: Boolean): WordsService.WordDetails {
     val details = ArrayList<WordDetailsItemVariant>()
+
+    if (addWordTitle) {
+        details.add(WordDetailsItemVariant(title = "Word"))
+        details.add(WordDetailsItemVariant(listItem = model.name))
+    }
 
     for (detailItem in model.details) {
         details.add(WordDetailsItemVariant(title = detailItem.title))
         details.add(WordDetailsItemVariant(desc = detailItem.value))
     }
 
-    val translations = model.translations.split(";").map { it.trim() }.filter { it.isNotBlank() }
+    val translations = model.translations.split(";")
+        .map { it.trim() }
+        .filter { it.isNotBlank() }
 
     if (translations.isNotEmpty())
         details.add(WordDetailsItemVariant(title = "Translations"))

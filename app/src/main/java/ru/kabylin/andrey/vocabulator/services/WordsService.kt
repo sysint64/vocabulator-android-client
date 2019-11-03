@@ -27,9 +27,15 @@ interface WordsService {
 
     fun getWordsForCategory(categoryRef: String): Single<List<Word>>
 
-    fun getTrainWordsForCategory(categoryRef: String): Single<List<Word>>
+    enum class Title {
+        WORD,
+        TRANSLATION,
+        TRANSLATION_OR_DEFINITION,
+    }
 
-    fun getWordDetails(ref: String): Single<WordDetails>
+    fun getTrainWordsForCategory(categoryRef: String, title: Title): Single<List<Word>>
+
+    fun getWordDetails(ref: String, addWordTitle: Boolean): Single<WordDetails>
 
     data class CategoryScore(
         val score: Int,
