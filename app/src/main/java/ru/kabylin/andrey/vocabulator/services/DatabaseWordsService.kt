@@ -10,30 +10,49 @@ class DatabaseWordsService(private val database: SyncDatabase) : WordsService {
         Single.fromCallable { database.dao().getAllCategories() }
             .map(::fromListCategoryDatabaseModelToListWordsServiceCategory)
 
-    override fun getWordsForCategory(categoryRef: String): Single<List<WordsService.Word>> =
-        Single.fromCallable { database.dao().getWordsForCategory(categoryRef) }
-            .map { fromListWordDatabaseModelToListWordsServiceWord(it, WordsService.Title.WORD) }
-            .map {
-                it.sortedBy {
-                    if (it.score == 0) 11 else it.score
-                }
-            }
-
-    override fun getTrainWordsForCategory(categoryRef: String, title: WordsService.Title): Single<List<WordsService.Word>> =
+    override fun getWordsForCategory(
+        categoryRef: String,
+        title: WordsService.Title,
+        orderBy: WordsService.OrderBy
+    ): Single<List<WordsService.Word>> =
         Single.fromCallable { database.dao().getWordsForCategory(categoryRef) }
             .map { fromListWordDatabaseModelToListWordsServiceWord(it, title) }
-            .map {
-                it.sortedBy {
-                    if (it.score == 0) 5 else it.score
-                }
-            }
+            .map { orderWords(it, orderBy) }
+
+    override fun getWordsForLanguage(
+        languageRef: String,
+        title: WordsService.Title,
+        orderBy: WordsService.OrderBy
+    ): Single<List<WordsService.Word>> =
+        Single.fromCallable { database.dao().getWordsForLanguage(languageRef) }
+            .map { fromListWordDatabaseModelToListWordsServiceWord(it, title) }
+            .map { orderWords(it, orderBy) }
+
+    private fun orderWords(
+        words: List<WordsService.Word>,
+        orderBy: WordsService.OrderBy
+    ): List<WordsService.Word> =
+        when (orderBy) {
+            WordsService.OrderBy.SCORE ->
+                // NOTE: 0 means that it's a new word
+                words.sortedBy { if (it.score == 0) 11 else it.score }
+
+            WordsService.OrderBy.REVISION_MODE ->
+                words.sortedBy { if (it.score == 0) 5 else it.score }
+
+            WordsService.OrderBy.LEARNING_MODE ->
+                words.sortedBy { it.score }
+
+            WordsService.OrderBy.RANDOM ->
+                words.shuffled()
+        }
 
     override fun getWordDetails(ref: String, addWordTitle: Boolean): Single<WordsService.WordDetails> =
         Single.fromCallable { database.dao().getWord(ref) }
             .map { fromWordDatabaseModelToWordsServiceWordDetails(it, addWordTitle) }
 
     override fun getScoresCounts(categoryRef: String): Single<List<WordsService.CategoryScore>> =
-        getWordsForCategory(categoryRef)
+        getWordsForCategory(categoryRef, WordsService.Title.WORD, WordsService.OrderBy.SCORE)
             .map { words ->
                 (0..10).map { score ->
                     WordsService.CategoryScore(

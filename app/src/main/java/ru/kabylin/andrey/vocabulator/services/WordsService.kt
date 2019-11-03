@@ -25,8 +25,6 @@ interface WordsService {
 
     fun getCategories(): Single<List<Category>>
 
-    fun getWordsForCategory(categoryRef: String): Single<List<Word>>
-
     enum class Title {
         WORD,
         TRANSCRIPTION_OR_WORD,
@@ -34,7 +32,24 @@ interface WordsService {
         TRANSLATION_OR_DEFINITION,
     }
 
-    fun getTrainWordsForCategory(categoryRef: String, title: Title): Single<List<Word>>
+    enum class OrderBy {
+        SCORE,
+        REVISION_MODE,
+        LEARNING_MODE,
+        RANDOM,
+    }
+
+    fun getWordsForCategory(
+        categoryRef: String,
+        title: Title,
+        orderBy: OrderBy
+    ): Single<List<Word>>
+
+    fun getWordsForLanguage(
+        languageRef: String,
+        title: Title,
+        orderBy: OrderBy
+    ): Single<List<Word>>
 
     fun getWordDetails(ref: String, addWordTitle: Boolean): Single<WordDetails>
 

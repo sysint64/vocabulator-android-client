@@ -2,7 +2,6 @@ package ru.kabylin.andrey.vocabulator.services
 
 import io.reactivex.Completable
 import io.reactivex.Single
-import ru.kabylin.andrey.vocabulator.models.TitleValue
 
 class LocalWordsService : WordsService {
     private val categories = listOf(
@@ -45,18 +44,19 @@ class LocalWordsService : WordsService {
     override fun getCategories(): Single<List<WordsService.Category>> =
         Single.just(categories)
 
-    override fun getWordsForCategory(categoryRef: String): Single<List<WordsService.Word>> =
+    override fun getWordsForCategory(categoryRef: String, title: WordsService.Title, orderBy: WordsService.OrderBy): Single<List<WordsService.Word>> =
         Single.just(
             words
                 .filter { it.first == categoryRef }
                 .map { it.second }
         )
 
-    override fun getTrainWordsForCategory(categoryRef: String, title: WordsService.Title): Single<List<WordsService.Word>> =
-        getWordsForCategory(categoryRef)
+    override fun getWordsForLanguage(languageRef: String, title: WordsService.Title, orderBy: WordsService.OrderBy): Single<List<WordsService.Word>> {
+        TODO("not implemented")
+    }
 
     override fun getScoresCounts(categoryRef: String): Single<List<WordsService.CategoryScore>> =
-        getWordsForCategory(categoryRef)
+        getWordsForCategory(categoryRef, WordsService.Title.WORD, WordsService.OrderBy.LEARNING_MODE)
             .map { words ->
                 (0..10).map { score ->
                     WordsService.CategoryScore(

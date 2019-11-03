@@ -7,13 +7,16 @@ import io.reactivex.subjects.Subject
 
 interface TrainService {
     enum class Mode {
-        WORD_TRANSLATION,
-        TRANSLATION_WORD
+        LEARNING,
+        REVISION,
+        RANDOM,
     }
 
-    fun startWordTranslation(categoryRef: String): Completable
+    fun setWordTitleForLanguage(languageRef: String, title: WordsService.Title): Completable
 
-    fun startTranslationWord(categoryRef: String): Completable
+    fun startByModeForCategory(categoryRef: String, mode: Mode): Completable
+
+    fun startByModeForLanguage(languageRef: String, mode: Mode): Completable
 
     data class Word(
         val ref: String,

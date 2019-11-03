@@ -14,7 +14,8 @@ class RealTrainService(
         const val PAGE_SIZE = 10
     }
 
-    private var mode = TrainService.Mode.WORD_TRANSLATION
+    private var mode = TrainService.Mode.REVISION
+    private var wordTitle = WordsService.Title.WORD
     private var wordsToLearn = ArrayList<TrainService.Word>()
 
     data class WordInPage(
@@ -29,15 +30,22 @@ class RealTrainService(
     private val finishEvents = PublishSubject.create<Boolean>()
     private var currentWordIndexRelativePage = 0
 
-    private fun getDisplayTitle(): WordsService.Title =
-        if (mode == TrainService.Mode.TRANSLATION_WORD) {
-            WordsService.Title.TRANSLATION_OR_DEFINITION
-        } else {
-            WordsService.Title.WORD
+    private fun getOrderBy(): WordsService.OrderBy =
+        when (mode) {
+            TrainService.Mode.REVISION -> WordsService.OrderBy.REVISION_MODE
+            TrainService.Mode.LEARNING -> WordsService.OrderBy.LEARNING_MODE
+            TrainService.Mode.RANDOM -> WordsService.OrderBy.RANDOM
         }
 
-    private fun getWords(categoryRef: String): Single<List<TrainService.Word>> =
-        wordsService.getTrainWordsForCategory(categoryRef, getDisplayTitle())
+    override fun setWordTitleForLanguage(languageRef: String, title: WordsService.Title): Completable =
+        Completable.fromAction {
+            wordTitle = title
+        }
+
+    override fun startByModeForCategory(categoryRef: String, mode: TrainService.Mode): Completable {
+        this.mode = mode
+
+        return wordsService.getWordsForCategory(categoryRef, wordTitle, getOrderBy())
             .map {
                 it.map {
                     TrainService.Word(
@@ -46,21 +54,24 @@ class RealTrainService(
                     )
                 }
             }
-
-    override fun startWordTranslation(categoryRef: String): Completable {
-        mode = TrainService.Mode.WORD_TRANSLATION
-
-        return getWords(categoryRef)
             .map {
                 init(it)
             }
             .toCompletable()
     }
 
-    override fun startTranslationWord(categoryRef: String): Completable {
-        mode = TrainService.Mode.TRANSLATION_WORD
+    override fun startByModeForLanguage(languageRef: String, mode: TrainService.Mode): Completable {
+        this.mode = mode
 
-        return getWords(categoryRef)
+        return wordsService.getWordsForLanguage(languageRef, wordTitle, getOrderBy())
+            .map {
+                it.map {
+                    TrainService.Word(
+                        ref = it.ref,
+                        name = it.name
+                    )
+                }
+            }
             .map {
                 init(it)
             }
@@ -166,7 +177,7 @@ class RealTrainService(
         currentWord().flatMap {
             wordsService.getWordDetails(
                 it.ref,
-                addWordTitle = getDisplayTitle() == WordsService.Title.TRANSLATION_OR_DEFINITION
+                addWordTitle = wordTitle == WordsService.Title.TRANSLATION_OR_DEFINITION
             )
         }
 

@@ -20,8 +20,14 @@ interface DatabaseModelDao {
         clearNewWords()
     }
 
+    @Query("SELECT * FROM languages")
+    fun getLanguages(): List<LanguageDatabaseModel>
+
     @Query("SELECT * FROM words WHERE category_ref = :categoryRef")
     fun getWordsForCategory(categoryRef: String): List<WordDatabaseModel>
+
+    @Query("SELECT * FROM words WHERE language_ref = :languageRef")
+    fun getWordsForLanguage(languageRef: String): List<WordDatabaseModel>
 
     @Query("SELECT * FROM words WHERE ref = :ref LIMIT 1")
     fun getWord(ref: String): WordDatabaseModel

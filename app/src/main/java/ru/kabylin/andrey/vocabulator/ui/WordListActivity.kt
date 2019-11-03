@@ -67,15 +67,16 @@ class WordListActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAw
 
         //
 
+        // TODO: Add modes
         translationWorldModeButton.setOnClickListener {
-            val query = trainService.startTranslationWord(categoryRef)
+            val query = trainService.startByModeForCategory(categoryRef, TrainService.Mode.REVISION)
             client.execute(query) {
                 gotoScreen(WordsScreens.TRAIN)
             }
         }
 
         wordTranslationModeButton.setOnClickListener {
-            val query = trainService.startWordTranslation(categoryRef)
+            val query = trainService.startByModeForCategory(categoryRef, TrainService.Mode.REVISION)
             client.execute(query) {
                 gotoScreen(WordsScreens.TRAIN)
             }
@@ -89,7 +90,11 @@ class WordListActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAw
     }
 
     private fun getWords() {
-        val query = wordsService.getWordsForCategory(categoryRef)
+        val query = wordsService.getWordsForCategory(
+            categoryRef,
+            title = WordsService.Title.WORD,
+            orderBy = WordsService.OrderBy.SCORE
+        )
 
         client.execute(query) {
             items.clear()
