@@ -30,6 +30,11 @@ fun getNormalizedScore(score: Int) =
 fun fromWordDatabaseModelToWordsServiceWord(model: WordDatabaseModel, title: WordsService.Title): WordsService.Word {
     val name = when (title) {
         WordsService.Title.WORD -> model.name
+
+        WordsService.Title.TRANSCRIPTION_OR_WORD ->
+            model.details.firstOrNull { it.title == "Pronounce" }?.value
+                ?: model.name
+
         WordsService.Title.TRANSLATION -> model.translations
         WordsService.Title.TRANSLATION_OR_DEFINITION -> if (model.translations.trim() == "-") {
             model.definitions.firstOrNull()?.desc ?: "?"

@@ -29,6 +29,7 @@ interface WordsService {
 
     enum class Title {
         WORD,
+        TRANSCRIPTION_OR_WORD,
         TRANSLATION,
         TRANSLATION_OR_DEFINITION,
     }
