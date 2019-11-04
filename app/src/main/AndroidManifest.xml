@@ -22,6 +22,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.LanguagesListActivity"
+            android:label="Languages" />
+
         <activity android:name=".ui.WordListActivity" />
 
         <activity

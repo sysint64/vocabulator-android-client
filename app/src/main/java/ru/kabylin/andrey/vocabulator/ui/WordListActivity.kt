@@ -25,7 +25,7 @@ class WordListActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAw
     override val kodeinContext = kcontext(this)
     override val kodein by closestKodein()
 
-    override val router = WordsRouter(this)
+    override val router = AppRouter(this)
     override val client: Client by instance()
     override val viewMediator by lazy { ClientViewMediator(client, this, lifecycle) }
 
@@ -71,14 +71,14 @@ class WordListActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAw
         translationWorldModeButton.setOnClickListener {
             val query = trainService.startByModeForCategory(categoryRef, TrainService.Mode.REVISION)
             client.execute(query) {
-                gotoScreen(WordsScreens.TRAIN)
+                gotoScreen(Routes.TRAIN)
             }
         }
 
         wordTranslationModeButton.setOnClickListener {
             val query = trainService.startByModeForCategory(categoryRef, TrainService.Mode.REVISION)
             client.execute(query) {
-                gotoScreen(WordsScreens.TRAIN)
+                gotoScreen(Routes.TRAIN)
             }
         }
     }
@@ -126,7 +126,7 @@ class WordListActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAw
     }
 
     private fun onWordClick(word: WordsService.Word) {
-        gotoScreen(WordsScreens.DETAILS, mapOf("ref" to word.ref))
+        gotoScreen(Routes.DETAILS, mapOf("ref" to word.ref))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -137,7 +137,7 @@ class WordListActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAw
     override fun onOptionsItemSelected(item: MenuItem) =
         when (item.itemId) {
             R.id.menu_add_word -> {
-                gotoScreen(WordsScreens.ADD_WORD)
+                gotoScreen(Routes.ADD_WORD)
                 true
             }
             else -> super.onOptionsItemSelected(item)

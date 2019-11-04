@@ -7,6 +7,12 @@ interface DatabaseModelDao {
     @Query("SELECT * FROM categories")
     fun getAllCategories(): List<CategoryDatabaseModel>
 
+    @Query("SELECT * FROM categories WHERE languageRef = :languageRef")
+    fun getCategoriesForLanguage(languageRef: String): List<CategoryDatabaseModel>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAllLanguages(languages: List<LanguageDatabaseModel>)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllCategories(categories: List<CategoryDatabaseModel>)
 
@@ -15,13 +21,14 @@ interface DatabaseModelDao {
 
     @Transaction
     fun sync(data: SyncDatabaseModel) {
+        insertAllLanguages(data.languages)
         insertAllCategories(data.categories)
         insertAllWords(data.words)
         clearNewWords()
     }
 
     @Query("SELECT * FROM languages")
-    fun getLanguages(): List<LanguageDatabaseModel>
+    fun getAllLanguages(): List<LanguageDatabaseModel>
 
     @Query("SELECT * FROM words WHERE category_ref = :categoryRef")
     fun getWordsForCategory(categoryRef: String): List<WordDatabaseModel>

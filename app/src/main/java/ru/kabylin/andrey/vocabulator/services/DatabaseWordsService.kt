@@ -5,9 +5,13 @@ import io.reactivex.Single
 import ru.kabylin.andrey.vocabulator.database.SyncDatabase
 import ru.kabylin.andrey.vocabulator.models.database.NewWordDatabaseModel
 
-class DatabaseWordsService(private val database: SyncDatabase) : WordsService {
+class DatabaseWordsService(
+    private val database: SyncDatabase,
+    private val languagesService: LanguagesService
+) : WordsService {
     override fun getCategories(): Single<List<WordsService.Category>> =
-        Single.fromCallable { database.dao().getAllCategories() }
+        languagesService.getCurrentLanguage()
+            .map { languageRef -> database.dao().getCategoriesForLanguage(languageRef) }
             .map(::fromListCategoryDatabaseModelToListWordsServiceCategory)
 
     override fun getWordsForCategory(

@@ -1,6 +1,7 @@
 package ru.kabylin.andrey.vocabulator.services
 
 import ru.kabylin.andrey.vocabulator.models.database.CategoryDatabaseModel
+import ru.kabylin.andrey.vocabulator.models.database.LanguageDatabaseModel
 import ru.kabylin.andrey.vocabulator.models.database.WordDatabaseModel
 import ru.kabylin.andrey.vocabulator.ui.models.Kanji
 import ru.kabylin.andrey.vocabulator.ui.models.WordDetailsDefinition
@@ -106,3 +107,9 @@ fun fromWordDatabaseModelToWordsServiceWordDetails(model: WordDatabaseModel, add
         details = details
     )
 }
+
+fun fromLanguageDatabaseModelToLanguagesServiceLanguage(model: LanguageDatabaseModel) =
+    LanguagesService.Language(
+        ref = model.ref,
+        name = model.name
+    )

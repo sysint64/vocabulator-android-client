@@ -29,7 +29,7 @@ class TrainActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAware
     override val kodeinContext = kcontext(this)
     override val kodein by closestKodein()
 
-    override val router = WordsRouter(this)
+    override val router = AppRouter(this)
     override val client: Client by instance()
     override val viewMediator by lazy { ClientViewMediator(client, this, lifecycle) }
 
@@ -200,7 +200,7 @@ class TrainActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAware
     override fun onOptionsItemSelected(item: MenuItem) =
         when (item.itemId) {
             R.id.menu_add_word -> {
-                gotoScreen(WordsScreens.ADD_WORD)
+                gotoScreen(Routes.ADD_WORD)
                 true
             }
             else -> super.onOptionsItemSelected(item)

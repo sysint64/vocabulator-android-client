@@ -5,7 +5,8 @@ import ru.kabylin.andrey.vocabulator.router.Router
 import ru.kabylin.andrey.vocabulator.views.ScreenTransition
 import ru.kabylin.andrey.vocabulator.views.ScreenTransitionEnum
 
-enum class WordsScreens : ScreenTransitionEnum {
+enum class Routes : ScreenTransitionEnum {
+    LANGUAGES,
     LIST,
     DETAILS,
     TRAIN,
@@ -13,32 +14,38 @@ enum class WordsScreens : ScreenTransitionEnum {
     ;
 }
 
-class WordsRouter(context: Context) : Router(context) {
+class AppRouter(context: Context) : Router(context) {
     override fun transitionUpdate(screenTransition: ScreenTransition<*>?) {
         super.transitionUpdate(screenTransition)
-        val transition = screenTransition?.transition as? WordsScreens
+        val transition = screenTransition?.transition as? Routes
             ?: return
 
         when (transition) {
-            WordsScreens.LIST ->
+            Routes.LANGUAGES ->
+                screenTransition.startActivity(
+                    context,
+                    LanguagesListActivity::class.java
+                )
+
+            Routes.LIST ->
                 screenTransition.startActivity(
                     context,
                     WordListActivity::class.java
                 )
 
-            WordsScreens.DETAILS ->
+            Routes.DETAILS ->
                 screenTransition.startActivity(
                     context,
                     WordDetailsActivity::class.java
                 )
 
-            WordsScreens.TRAIN ->
+            Routes.TRAIN ->
                 screenTransition.startActivity(
                     context,
                     TrainActivity::class.java
                 )
 
-            WordsScreens.ADD_WORD ->
+            Routes.ADD_WORD ->
                 screenTransition.startActivity(
                     context,
                     AddWordActivity::class.java

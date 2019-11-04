@@ -10,6 +10,13 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/menu_languages"
+        android:icon="@drawable/ic_translate"
+        android:title="Languages"
+        app:iconTint="#fff"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/menu_add_word"
         android:icon="@drawable/ic_dictionary"
         android:title="Add word"

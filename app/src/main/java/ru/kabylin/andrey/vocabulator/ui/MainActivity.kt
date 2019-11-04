@@ -27,7 +27,7 @@ class MainActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAware 
     override val kodeinContext = kcontext(this)
     override val kodein by closestKodein()
 
-    override val router = WordsRouter(this)
+    override val router = AppRouter(this)
     override val client: Client by instance()
     override val viewMediator by lazy { ClientViewMediator(client, this, lifecycle) }
 
@@ -84,7 +84,7 @@ class MainActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAware 
             "categoryRef" to category.ref,
             "categoryName" to category.name
         )
-        gotoScreen(WordsScreens.LIST, extras)
+        gotoScreen(Routes.LIST, extras)
     }
 
     override fun onRequestStateUpdated(requestState: ClientResponse<RequestState>) {
@@ -107,12 +107,16 @@ class MainActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAware 
 
     override fun onOptionsItemSelected(item: MenuItem) =
         when (item.itemId) {
+            R.id.menu_languages -> {
+                gotoScreen(Routes.LANGUAGES)
+                true
+            }
             R.id.menu_sync -> {
                 sync()
                 true
             }
             R.id.menu_add_word -> {
-                gotoScreen(WordsScreens.ADD_WORD)
+                gotoScreen(Routes.ADD_WORD)
                 true
             }
             else -> super.onOptionsItemSelected(item)

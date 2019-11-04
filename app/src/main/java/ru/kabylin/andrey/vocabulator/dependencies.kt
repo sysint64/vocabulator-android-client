@@ -25,9 +25,18 @@ fun dependencies(context: Context) = Kodein.Module {
         Room.databaseBuilder(context, SyncDatabase::class.java, "sync_storage").build()
     }
 
+    bind<LanguagesService>() with singleton {
+        DatabaseLanguagesService(
+            database = instance("storage")
+        )
+    }
+
     bind<WordsService>() with singleton {
         DatabaseWordsService(
-            database = instance("storage")
+            database = instance("storage"),
+            languagesService = DatabaseLanguagesService(
+                database = instance("storage")
+            )
         )
     }
     bind<TrainService>() with singleton {

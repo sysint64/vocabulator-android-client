@@ -17,7 +17,7 @@ class AddWordActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAwa
     override val kodeinContext = kcontext(this)
     override val kodein by closestKodein()
 
-    override val router = WordsRouter(this)
+    override val router = AppRouter(this)
     override val client: Client by instance()
     override val viewMediator by lazy { ClientViewMediator(client, this, lifecycle) }
 
