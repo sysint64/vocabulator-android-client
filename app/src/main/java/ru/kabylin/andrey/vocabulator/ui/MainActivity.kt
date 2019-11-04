@@ -70,12 +70,7 @@ class MainActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAware 
 
     override fun viewStateRefresh() {
         super.viewStateRefresh()
-
-        if (isNetworkAvailable(this) && Settings.nextSync < now().time) {
-            sync()
-        } else {
-            getCategories()
-        }
+        getCategories()
     }
 
     private fun getCategories() {
