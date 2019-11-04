@@ -9,9 +9,14 @@ enum class Routes : ScreenTransitionEnum {
     LANGUAGES,
     LIST,
     DETAILS,
+    TRAIN_MENU,
     TRAIN,
     ADD_WORD
     ;
+
+    companion object {
+        const val RESULT_CODE_TRAIN_MENU = 4001
+    }
 }
 
 class AppRouter(context: Context) : Router(context) {
@@ -21,6 +26,13 @@ class AppRouter(context: Context) : Router(context) {
             ?: return
 
         when (transition) {
+            Routes.TRAIN_MENU ->
+                screenTransition.startActivityForResult(
+                    context,
+                    TrainMenuActivity::class.java,
+                    Routes.RESULT_CODE_TRAIN_MENU
+                )
+
             Routes.LANGUAGES ->
                 screenTransition.startActivity(
                     context,

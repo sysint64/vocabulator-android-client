@@ -4,6 +4,8 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
+import ru.kabylin.andrey.vocabulator.Settings
+import java.lang.IllegalStateException
 
 class RealTrainService(
     val wordsService: WordsService,
@@ -30,6 +32,9 @@ class RealTrainService(
     private val finishEvents = PublishSubject.create<Boolean>()
     private var currentWordIndexRelativePage = 0
 
+    private var languageRef: String? = null
+    private var categoryRef: String? = null
+
     private fun getOrderBy(): WordsService.OrderBy =
         when (mode) {
             TrainService.Mode.REVISION -> WordsService.OrderBy.REVISION_MODE
@@ -37,15 +42,21 @@ class RealTrainService(
             TrainService.Mode.RANDOM -> WordsService.OrderBy.RANDOM
         }
 
-    override fun setWordTitleForLanguage(languageRef: String, title: WordsService.Title): Completable =
-        Completable.fromAction {
-            wordTitle = title
+    override fun startTraining(): Completable {
+        val languageRef = this.languageRef
+        val categoryRef = this.categoryRef
+
+        val words = when {
+            languageRef != null ->
+                wordsService.getWordsForLanguage(languageRef, wordTitle, getOrderBy())
+
+            categoryRef != null ->
+                wordsService.getWordsForCategory(categoryRef, wordTitle, getOrderBy())
+
+            else -> throw  IllegalStateException()
         }
 
-    override fun startByModeForCategory(categoryRef: String, mode: TrainService.Mode): Completable {
-        this.mode = mode
-
-        return wordsService.getWordsForCategory(categoryRef, wordTitle, getOrderBy())
+        return words
             .map {
                 it.map {
                     TrainService.Word(
@@ -60,23 +71,29 @@ class RealTrainService(
             .toCompletable()
     }
 
-    override fun startByModeForLanguage(languageRef: String, mode: TrainService.Mode): Completable {
-        this.mode = mode
+    override fun setLanguage(languageRef: String): Completable =
+        Completable.fromAction {
+            this.languageRef = languageRef
+            this.categoryRef = null
+        }
 
-        return wordsService.getWordsForLanguage(languageRef, wordTitle, getOrderBy())
-            .map {
-                it.map {
-                    TrainService.Word(
-                        ref = it.ref,
-                        name = it.name
-                    )
-                }
-            }
-            .map {
-                init(it)
-            }
-            .toCompletable()
-    }
+    override fun setCategory(categoryRef: String): Completable =
+        Completable.fromAction {
+            this.languageRef = null
+            this.categoryRef = categoryRef
+        }
+
+    override fun setWordTitle(title: WordsService.Title): Completable =
+        Completable.fromAction {
+            Settings.currentWordTitle = title.toString()
+            this.wordTitle = title
+        }
+
+    override fun setMode(mode: TrainService.Mode): Completable =
+        Completable.fromAction {
+            Settings.currentMode = mode.toString()
+            this.mode = mode
+        }
 
     private fun init(words: List<TrainService.Word>) {
         wordsToLearn.clear()

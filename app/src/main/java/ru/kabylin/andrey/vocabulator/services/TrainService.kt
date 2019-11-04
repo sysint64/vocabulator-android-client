@@ -12,11 +12,15 @@ interface TrainService {
         RANDOM,
     }
 
-    fun setWordTitleForLanguage(languageRef: String, title: WordsService.Title): Completable
+    fun startTraining(): Completable
 
-    fun startByModeForCategory(categoryRef: String, mode: Mode): Completable
+    fun setLanguage(languageRef: String): Completable
 
-    fun startByModeForLanguage(languageRef: String, mode: Mode): Completable
+    fun setCategory(categoryRef: String): Completable
+
+    fun setWordTitle(title: WordsService.Title): Completable
+
+    fun setMode(mode: Mode): Completable
 
     data class Word(
         val ref: String,

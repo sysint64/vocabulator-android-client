@@ -1,12 +1,19 @@
 package ru.kabylin.andrey.vocabulator.ui
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_word_list.*
+import kotlinx.android.synthetic.main.activity_word_list.container
+import kotlinx.android.synthetic.main.activity_word_list.floatingActionButtonTrain
+import kotlinx.android.synthetic.main.activity_word_list.recyclerView
+import kotlinx.android.synthetic.main.activity_word_list.toolbar
 import kotlinx.android.synthetic.main.item_word_score_count.view.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.closestKodein
@@ -57,6 +64,9 @@ class WordListActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAw
 
         recyclerView.adapter = recyclerAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
+        floatingActionButtonTrain.setOnClickListener {
+            onTrainClick()
+        }
 
         //
 
@@ -64,22 +74,13 @@ class WordListActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAw
 
         for (i in 1..10)
             addScore(i.toString(), i)
+    }
 
-        //
+    private fun onTrainClick() {
+        val query = trainService.setCategory(categoryRef)
 
-        // TODO: Add modes
-        translationWorldModeButton.setOnClickListener {
-            val query = trainService.startByModeForCategory(categoryRef, TrainService.Mode.REVISION)
-            client.execute(query) {
-                gotoScreen(Routes.TRAIN)
-            }
-        }
-
-        wordTranslationModeButton.setOnClickListener {
-            val query = trainService.startByModeForCategory(categoryRef, TrainService.Mode.REVISION)
-            client.execute(query) {
-                gotoScreen(Routes.TRAIN)
-            }
+        client.execute(query) {
+            gotoScreen(Routes.TRAIN_MENU)
         }
     }
 
@@ -142,4 +143,16 @@ class WordListActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAw
             }
             else -> super.onOptionsItemSelected(item)
         }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == Routes.RESULT_CODE_TRAIN_MENU && resultCode == Activity.RESULT_OK) {
+            val query = trainService.startTraining()
+
+            client.execute(query) {
+                gotoScreen(Routes.TRAIN)
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
 }

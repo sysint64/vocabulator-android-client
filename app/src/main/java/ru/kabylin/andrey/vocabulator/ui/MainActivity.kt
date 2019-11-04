@@ -1,5 +1,7 @@
 package ru.kabylin.andrey.vocabulator.ui
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
@@ -17,8 +19,10 @@ import android.view.MenuItem
 import ru.kabylin.andrey.vocabulator.R
 import ru.kabylin.andrey.vocabulator.Settings
 import ru.kabylin.andrey.vocabulator.ext.*
+import ru.kabylin.andrey.vocabulator.services.LanguagesService
 import ru.kabylin.andrey.vocabulator.ui.holders.CategoryCardHolder
 import ru.kabylin.andrey.vocabulator.services.SyncService
+import ru.kabylin.andrey.vocabulator.services.TrainService
 import ru.kabylin.andrey.vocabulator.tools.isNetworkAvailable
 import ru.kabylin.andrey.vocabulator.views.*
 import java.util.*
@@ -31,8 +35,10 @@ class MainActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAware 
     override val client: Client by instance()
     override val viewMediator by lazy { ClientViewMediator(client, this, lifecycle) }
 
+    private val languagesService: LanguagesService by instance()
     private val wordsService: WordsService by instance()
     private val syncService: SyncService by instance()
+    private val trainService: TrainService by instance()
 
     private val items = ArrayList<WordsService.Category>()
 
@@ -55,6 +61,10 @@ class MainActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAware 
         val callback = GridDragAndDropItemTouchHelperCallback(recyclerAdapter)
         val touchHelper = ItemTouchHelper(callback)
 
+        floatingActionButtonTrain.setOnClickListener {
+            onTrainClick()
+        }
+
         touchHelper.attachToRecyclerView(recyclerView)
     }
 
@@ -63,8 +73,7 @@ class MainActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAware 
 
         if (isNetworkAvailable(this) && Settings.nextSync < now().time) {
             sync()
-        }
-        else {
+        } else {
             getCategories()
         }
     }
@@ -87,6 +96,15 @@ class MainActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAware 
         gotoScreen(Routes.LIST, extras)
     }
 
+    private fun onTrainClick() {
+        val query = languagesService.getCurrentLanguage()
+            .flatMapCompletable { trainService.setLanguage(it) }
+
+        client.execute(query) {
+            gotoScreen(Routes.TRAIN_MENU)
+        }
+    }
+
     override fun onRequestStateUpdated(requestState: ClientResponse<RequestState>) {
         when (requestState.payload) {
             RequestState.STARTED -> {
@@ -97,6 +115,18 @@ class MainActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAware 
                 progressBar.hideView()
                 recyclerView.showView()
             }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == Routes.RESULT_CODE_TRAIN_MENU && resultCode == Activity.RESULT_OK) {
+            val query = trainService.startTraining()
+
+            client.execute(query) {
+                gotoScreen(Routes.TRAIN)
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
         }
     }
 

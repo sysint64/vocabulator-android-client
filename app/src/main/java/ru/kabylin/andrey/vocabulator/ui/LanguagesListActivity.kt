@@ -3,6 +3,11 @@ package ru.kabylin.andrey.vocabulator.ui
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_languages.*
+import kotlinx.android.synthetic.main.activity_languages.container
+import kotlinx.android.synthetic.main.activity_languages.progressBar
+import kotlinx.android.synthetic.main.activity_languages.recyclerView
+import kotlinx.android.synthetic.main.activity_languages.toolbar
+import kotlinx.android.synthetic.main.activity_word_details.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.closestKodein
 import org.kodein.di.generic.instance
@@ -45,7 +50,7 @@ class LanguagesListActivity : ClientAppCompatActivity<ClientViewMediator>(), Kod
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_languages)
 
-        toolbar.attachToActivity(this)
+        toolbar.attachToActivity(this, displayHomeButton = true)
         errorsView.attach(container)
 
         recyclerView.adapter = recyclerAdapter
