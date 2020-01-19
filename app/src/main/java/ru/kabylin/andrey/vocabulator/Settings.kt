@@ -10,4 +10,8 @@ object Settings : KotprefModel() {
     var currentWordTitle: String by stringPref(default = "")
 
     var currentLanguage: String by stringPref(default = "")
+
+    var serverUrl: String by stringPref(default = "")
+
+    var serverPort: Int by intPref(default = 50051)
 }

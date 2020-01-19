@@ -56,4 +56,8 @@ fun dependencies(context: Context) = Kodein.Module {
             database = instance("storage")
         )
     }
+
+    bind<SettingsService>() with singleton {
+        SettingsServiceImpl()
+    }
 }

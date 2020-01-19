@@ -13,4 +13,7 @@
     <string name="close">Закрыть</string>
     <string name="update">Обновить</string>
     <string name="not_found_error_description">К сожалению данного ресурса больше нет в системе либо сервер временно не доступен\n\nпопробуйте выбрать что нибудь другое либо повторите запрос позже. Также проверьте весрию приложения, возможно есть обновления.</string>
+    <string name="server_url">Адрес сервера</string>
+    <string name="server_port">Порт сервера</string>
+    <string name="save">Сохранить</string>
 </resources>

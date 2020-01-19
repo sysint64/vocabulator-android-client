@@ -1,6 +1,5 @@
 package ru.kabylin.andrey.vocabulator.client.http
 
-import com.google.gson.Gson
 import io.grpc.ManagedChannelBuilder
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
@@ -8,6 +7,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.kabylin.andrey.vocabulator.BuildConfig
+import ru.kabylin.andrey.vocabulator.Settings
 import ru.kabylin.andrey.vocabulator.client.Client
 import ru.kabylin.andrey.vocabulator.services.DataStorage
 import java.util.concurrent.TimeUnit
@@ -16,18 +16,15 @@ object HttpClient : Client() {
     val dataState = DataStorage()
 
     private val mainApiRetrofit by lazy {
-        val endpoint = BuildConfig.API_ENDPOINT
-        retrofitBuilder(endpoint)
+        retrofitBuilder(Settings.serverUrl)
             .client(createHttpClientInstance())
             .build()
     }
 
-    val gson = Gson()
-    val grpcChannel by lazy {
-        ManagedChannelBuilder.forAddress(BuildConfig.GRPC_ENDPOINT, BuildConfig.GRPC_PORT)
+    fun grpcChannel() =
+        ManagedChannelBuilder.forAddress(Settings.serverUrl, Settings.serverPort)
             .usePlaintext()
             .build()
-    }
 
     private fun retrofitBuilder(endpoint: String): Retrofit.Builder {
         return Retrofit.Builder()

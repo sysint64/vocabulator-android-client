@@ -44,6 +44,10 @@
         <activity
             android:name=".ui.AddWordActivity"
             android:label="Add new word" />
+
+        <activity
+            android:name=".ui.SettingsActivity"
+            android:label="Settings" />
     </application>
 
 </manifest>

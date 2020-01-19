@@ -11,7 +11,8 @@ enum class Routes : ScreenTransitionEnum {
     DETAILS,
     TRAIN_MENU,
     TRAIN,
-    ADD_WORD
+    ADD_WORD,
+    SETTINGS,
     ;
 
     companion object {
@@ -61,6 +62,12 @@ class AppRouter(context: Context) : Router(context) {
                 screenTransition.startActivity(
                     context,
                     AddWordActivity::class.java
+                )
+
+            Routes.SETTINGS ->
+                screenTransition.startActivity(
+                    context,
+                    SettingsActivity::class.java
                 )
         }
     }

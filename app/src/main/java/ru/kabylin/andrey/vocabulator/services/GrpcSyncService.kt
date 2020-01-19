@@ -21,7 +21,7 @@ class GrpcSyncService(
 
     override fun sync(): Completable =
         Single.fromCallable {
-            val stub = SyncGrpc.newBlockingStub(client.grpcChannel)
+            val stub = SyncGrpc.newBlockingStub(client.grpcChannel())
             val request = SyncGrpcRequest.newBuilder()
             var index = 0
 

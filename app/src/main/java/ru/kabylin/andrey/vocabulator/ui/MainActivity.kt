@@ -144,6 +144,10 @@ class MainActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAware 
                 gotoScreen(Routes.ADD_WORD)
                 true
             }
+            R.id.menu_settings -> {
+                gotoScreen(Routes.SETTINGS)
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
 

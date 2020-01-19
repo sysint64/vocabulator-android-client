@@ -37,19 +37,9 @@ android {
 
         Properties properties = new Properties()
         properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
-        def apiEndpoint = properties.getOrDefault('api.endpoint', '"http://192.168.0.100:8080/api/"')
-        buildConfigField("String", "API_ENDPOINT", apiEndpoint)
-
-        def grpcEndpoint = properties.getOrDefault('grpc.endpoint', '"192.168.0.100"')
-        def grpcPort = properties.getOrDefault('grpc.port', '50051')
-
-        buildConfigField("String", "GRPC_ENDPOINT", grpcEndpoint)
-        buildConfigField("Integer", "GRPC_PORT", grpcPort)
     }
     buildTypes {
         debug {
-            buildConfigField("String", "API_ENDPOINT", "\"${host.api.debug.endpoint}\"")
             versionNameSuffix = " Build: ${version.version_number} - Debug"
         }
         release {

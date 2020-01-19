@@ -8,7 +8,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_word_list.*
 import kotlinx.android.synthetic.main.activity_word_list.container
 import kotlinx.android.synthetic.main.activity_word_list.floatingActionButtonTrain
@@ -18,7 +17,6 @@ import kotlinx.android.synthetic.main.item_word_score_count.view.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.closestKodein
 import org.kodein.di.generic.instance
-import org.kodein.di.generic.kcontext
 import ru.kabylin.andrey.vocabulator.R
 import ru.kabylin.andrey.vocabulator.client.Client
 import ru.kabylin.andrey.vocabulator.ext.hideView
@@ -29,7 +27,6 @@ import ru.kabylin.andrey.vocabulator.services.WordsService
 import ru.kabylin.andrey.vocabulator.views.*
 
 class WordListActivity : ClientAppCompatActivity<ClientViewMediator>(), KodeinAware {
-    override val kodeinContext = kcontext(this)
     override val kodein by closestKodein()
 
     override val router = AppRouter(this)

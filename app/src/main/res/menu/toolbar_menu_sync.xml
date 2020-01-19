@@ -12,9 +12,9 @@
     <item
         android:id="@+id/menu_languages"
         android:icon="@drawable/ic_translate"
-        android:title="Languages"
+        android:title="Select Language"
         app:iconTint="#fff"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/menu_add_word"
@@ -22,4 +22,11 @@
         android:title="Add word"
         app:iconTint="#fff"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_settings"
+        android:icon="@drawable/ic_settings"
+        android:title="Settings"
+        app:iconTint="#fff"
+        app:showAsAction="ifRoom" />
 </menu>

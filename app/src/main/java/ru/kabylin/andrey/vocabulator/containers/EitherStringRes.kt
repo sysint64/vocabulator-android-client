@@ -28,11 +28,7 @@ class EitherStringRes(val string: String?, val res: Int?) : ContextStringify {
     }
 
     override fun toString(): String {
-        return if (this.string != null) {
-            this.string
-        } else {
-            super.toString()
-        }
+        return this.string ?: super.toString()
     }
 
     override fun toString(context: Context): String =
